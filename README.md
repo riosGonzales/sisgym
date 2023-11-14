@@ -1,1 +1,1 @@
-# sisgym
+# sisGimnasio
