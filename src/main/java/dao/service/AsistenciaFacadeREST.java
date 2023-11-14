@@ -47,8 +47,8 @@ public class AsistenciaFacadeREST extends AbstractFacade<Asistencia> {
 
     @POST
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Response crear(AsistenciaDTO entidad, @HeaderParam("token") String token, @HeaderParam("usu") String usu) {
-        if (validacion.ValidarToken(usu, token)) {
+    public Response crear(AsistenciaDTO entidad, @HeaderParam("token") String token) {
+        if (validacion.ValidarToken(token)) {
             try {
                 Cliente cliente = clienteService.buscarDNI(entidad.getClienteidCliente());
                 if (cliente != null) {

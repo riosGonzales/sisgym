@@ -43,8 +43,8 @@ public class ClasesFacadeREST extends AbstractFacade<Clases> {
 
     @POST
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Response crear(Clases entity, @HeaderParam("token") String token, @HeaderParam("usu") String usu) {
-        if (vs.ValidarToken(usu, token)) {
+    public Response crear(Clases entity, @HeaderParam("token") String token) {
+        if (vs.ValidarToken( token)) {
             cs.crearRapido( entity);
             return Response.status(Response.Status.OK).build(); // Código 200 para solicitud exitosa
 
@@ -77,9 +77,9 @@ public class ClasesFacadeREST extends AbstractFacade<Clases> {
     @GET
     @Path("json")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Response listar(@HeaderParam("token") String token, @HeaderParam("usu") String usu) {
-        if (token != null && usu != null) {
-            if (vs.ValidarToken(usu, token)) {
+    public Response listar(@HeaderParam("token") String token) {
+        if (token != null ) {
+            if (vs.ValidarToken( token)) {
                 return Response.status(Response.Status.OK).entity(cs.getJSon()).build(); // Código 200 para solicitud exitosa
             } else {
                 return Response.status(Response.Status.UNAUTHORIZED).entity("Error: Token no válido").build(); // Código 401 para no autorizado

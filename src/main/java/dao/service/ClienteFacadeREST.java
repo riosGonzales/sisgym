@@ -1,7 +1,6 @@
 package dao.service;
 
 import Entities.Cliente;
-import PDF.GeneradorPDF;
 import Service.ClienteService;
 import Service.ValidacionService;
 import java.util.List;
@@ -49,8 +48,8 @@ public class ClienteFacadeREST extends AbstractFacade<Cliente> {
 //}
     @POST
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Response create(Cliente entidad, @HeaderParam("token") String token, @HeaderParam("usu") String usu) {
-        if (validacion.ValidarToken(usu, token)) {
+    public Response create(Cliente entidad, @HeaderParam("token") String token) {
+        if (validacion.ValidarToken(token)) {
             int codigo = servicio.crear(entidad);
             return Response.status(Response.Status.OK).entity(codigo).build(); // Código 200 para solicitud exitosa
 
@@ -74,9 +73,9 @@ public class ClienteFacadeREST extends AbstractFacade<Cliente> {
     @Path("/{id}")
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Response edit(@PathParam("id") Integer id, Cliente entidad, @HeaderParam("token") String token, @HeaderParam("usu") String usu) {
+    public Response edit(@PathParam("id") Integer id, Cliente entidad, @HeaderParam("token") String token) {
         try {
-            if (validacion.ValidarToken(usu, token)) {
+            if (validacion.ValidarToken(token)) {
                 servicio.editar2(id, entidad);
                 return Response.status(Response.Status.OK).entity(entidad).build(); // Código 200 para solicitud exitosa
 
@@ -93,8 +92,8 @@ public class ClienteFacadeREST extends AbstractFacade<Cliente> {
 
     @DELETE
     @Path("/{id}")
-    public Response remove(@PathParam("id") Integer id, @HeaderParam("token") String token, @HeaderParam("usu") String usu) throws IllegalOrphanException, NonexistentEntityException {
-        if (validacion.ValidarToken(usu, token)) {
+    public Response remove(@PathParam("id") Integer id, @HeaderParam("token") String token) throws IllegalOrphanException, NonexistentEntityException {
+        if (validacion.ValidarToken(token)) {
             servicio.LogicDelete(id);
             return Response.status(Response.Status.OK).build(); // Código 200 para solicitud exitosa
 
@@ -108,8 +107,8 @@ public class ClienteFacadeREST extends AbstractFacade<Cliente> {
     @GET
     @Path("/{id}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Response find(@PathParam("id") Integer id, @HeaderParam("token") String token, @HeaderParam("usu") String usu) throws IllegalOrphanException {
-        if (validacion.ValidarToken(usu, token)) {
+    public Response find(@PathParam("id") Integer id, @HeaderParam("token") String token) throws IllegalOrphanException {
+        if (validacion.ValidarToken(token)) {
             return Response.status(Response.Status.OK).entity(servicio.buscar(id)).build(); // Código 200 para solicitud exitosa
         } else {
             return Response.status(Response.Status.UNAUTHORIZED).entity("Error: Token no válido").build(); // Código 401 para no autorizado
@@ -120,8 +119,8 @@ public class ClienteFacadeREST extends AbstractFacade<Cliente> {
 //-----------------------------------------------------------------------------------------------------------------------------------    
     @GET
     @Path("imprimirPDF")
-    public Response imprimirPDF(@HeaderParam("token") String token, @HeaderParam("usu") String usu) {
-        if (validacion.ValidarToken(usu, token)) {
+    public Response imprimirPDF(@HeaderParam("token") String token) {
+        if (validacion.ValidarToken(token)) {
             servicio.imprimirReporte();
             return Response.status(Response.Status.OK).entity("Reporte Generado Exitosamente").build(); // Código 200 para solicitud exitosa
         } else {
@@ -143,9 +142,9 @@ public class ClienteFacadeREST extends AbstractFacade<Cliente> {
 //    }
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public Response findAll(@HeaderParam("token") String token, @HeaderParam("usu") String usu) {
+    public Response findAll(@HeaderParam("token") String token) {
         try {
-            if (validacion.ValidarToken(usu, token)) {
+            if (validacion.ValidarToken(token)) {
                 return Response.status(Response.Status.OK).entity(servicio.ListaClientes()).build();
             } else {
                 return Response.status(Response.Status.UNAUTHORIZED).entity("Error de autenticación: Token inválido").build();

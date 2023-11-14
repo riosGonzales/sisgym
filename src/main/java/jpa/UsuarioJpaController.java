@@ -17,6 +17,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import jpa.exceptions.NonexistentEntityException;
 import security.AES;
+import security.JwtHelper;
 
 /**
  *
@@ -101,7 +102,10 @@ public class UsuarioJpaController implements Serializable {
 
             if (usuario != null) {
                 String UsuarioYFecha = logiUsua + fecha;
-                String token = AES.encrypt(UsuarioYFecha, "lafedecuto");
+
+                String token = JwtHelper.generateToken(UsuarioYFecha);
+
+                //String token = AES.encrypt(UsuarioYFecha, "lafedecuto");
                 System.out.println(token);
                 int idEmpleado = usuario.getEmpleadoidEmpleado().getIdEmpleado();
                 return "{\"resultado\":\"valido\", \"token\":\"" + token + "\", \"idEmpleado\":\"" + idEmpleado + "\"}";
@@ -188,6 +192,18 @@ public class UsuarioJpaController implements Serializable {
         } finally {
             em.close();
         }
+    }
+
+    public static void main(String[] args) {
+        try {
+            UsuarioJpaController usujpa = new UsuarioJpaController();
+            String aa = usujpa.validarUsuario("tUki", "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad", "2023-10-13");
+            System.out.println(aa);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
 }

@@ -23,7 +23,7 @@ public class GeneradorPDF {
         public GeneradorPDF() {
             direcciones.add("E:\\Downloads\\Gym_SegundoMOD\\Casi_Final\\Sis_Gym\\src\\main\\webapp\\reporte\\Registro.pdf");
             direcciones.add("C:\\Users\\wtke9\\Downloads\\Sis_Gym\\Sis_Gym\\src\\main\\webapp\\reporte\\Registro.pdf");
-            direcciones.add("C:\\Users\\jano_\\Downloads\\Sis_Gym\\src\\main\\webapp\\reporte\\Registro.pdf");
+            direcciones.add("C:\\Users\\jano_\\OneDrive\\Documents\\NetBeansProjects\\sisgym\\src\\main\\webapp\\reporte\\Registro.pdf");
     }
 
     
@@ -37,7 +37,7 @@ public class GeneradorPDF {
 
         try {
             //String rutaPDF = "C:\\Users\\Daniscarft\\Downloads\\Sis_Gym\\Sis_Gym\\src\\main\\webapp\\reporte\\Registro.pdf";
-            String rutaPDF = direcciones.get(1);
+            String rutaPDF = direcciones.get(2);
             PdfWriter.getInstance(document, new FileOutputStream(rutaPDF));
             document.open();
 

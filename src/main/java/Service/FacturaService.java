@@ -33,7 +33,7 @@ public class FacturaService {
     
     public FacturaService() {
         direcciones.add("E:\\Downloads\\Gym_SegundoMOD\\Casi_Final\\Sis_Gym\\src\\main\\webapp\\factura\\");
-        direcciones.add("C:\\Users\\jano_\\Downloads\\Sis_Gym\\src\\main\\webapp\\factura\\");
+        direcciones.add("C:\\Users\\jano_\\OneDrive\\Documents\\NetBeansProjects\\sisgym\\src\\main\\webapp\\factura\\");
         direcciones.add("C:\\Users\\wtke9\\Downloads\\Sis_Gym\\Sis_Gym\\src\\main\\webapp\\factura\\");
     }
     
@@ -80,25 +80,6 @@ public class FacturaService {
         }
     }
 
-//    public void generarFactura(int num) {
-//        try {
-//            Connection cn = MySQL.getInstance().getConnection();
-//           // String direccion = "C:\\Users\\Daniscarft\\Downloads\\Sis_Gym\\src\\main\\java\\Service\\factura.jrxml";
-//            //String direccion = "E:\\Downloads\\Gym_SegundoMOD\\Actual\\Sis_Gym (2)\\Sis_Gym\\src\\main\\java\\Service\\factura.jrxml";
-//            //String direccion = "E:\\User\\Documentos\\UNI\\VI CICLO\\Criptografia II\\Sistema pyGymfit\\sisGYM ACTUAL\\Sis_Gym\\src\\main\\java\\Service\\factura.jrxml";
-//            String direccion = "C:\\Users\\jano_\\Downloads\\Sis_Gym\\Sis_Gym\\src\\main\\java\\Service\\factura.jrxml";
-//            JasperReport reporte = JasperCompileManager.compileReport(direccion);
-//            Map<String, Object> parametros = new HashMap<>();
-//            parametros.put("idFactura", num);
-//            JasperPrint mostrarReporte = JasperFillManager.fillReport(reporte, parametros, cn);
-//           // String rutaPDF = "C:\\Users\\Daniscarft\\Downloads\\Sis_Gym\\src\\main\\webapp\\factura\\factura" + num + ".pdf";
-//            //String rutaPDF = "E:\\User\\Documentos\\UNI\\VI CICLO\\Criptografia II\\Sistema pyGymfit\\sisGYM ACTUAL\\Sis_Gym\\src\\main\\webapp\\factura\\factura" + num + ".pdf";
-//            String rutaPDF = "C:\\Users\\jano_\\Downloads\\Sis_Gym\\Sis_Gym\\src\\main\\webapp\\factura\\factura" + num + ".pdf";
-//            JasperExportManager.exportReportToPdfFile(mostrarReporte, rutaPDF);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
     public void generarFactura(int num) {
         try {
             Connection cn = MySQL.getInstance().getConnection();
@@ -112,7 +93,7 @@ public class FacturaService {
             JasperPrint mostrarReporte = JasperFillManager.fillReport(reporte, parametros, cn);
             
             //DIRECION PA LA FACTURA
-            String rutaPDF = direcciones.get(2) + "factura" + num + ".pdf";
+            String rutaPDF = direcciones.get(1) + "factura" + num + ".pdf";
             JasperExportManager.exportReportToPdfFile(mostrarReporte, rutaPDF);
         } catch (Exception e) {
             e.printStackTrace();
