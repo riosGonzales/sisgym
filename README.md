@@ -1,7 +1,7 @@
 # SistemaGym
 
 Integrantes:  
-- Echegaray Ayala, Angie  
+- Echegaray Ayala, Angie  😺
 - Marin Silva, Daniella  
 - Requena Castro, Nicolas  
 - Rios Gonzales, Jeancarlos  
