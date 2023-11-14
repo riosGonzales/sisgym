@@ -1,0 +1,121 @@
+
+package Service;
+
+import Entities.Cliente;
+import Entities.Empleado;
+import Entities.Factura;
+import Entities.Pago;
+import conexion.MySQL;
+import dto.FacturaDTO;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import jpa.EmpleadoJpaController;
+import jpa.FacturaJpaController;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+
+public class FacturaService {
+    
+    FacturaJpaController facturaJPA = new FacturaJpaController();
+    ClienteService clienteService = new ClienteService();
+    PagoService pagoService = new PagoService();
+    EmpleadoJpaController empleadoJPA = new EmpleadoJpaController();
+    
+    List<String> direcciones = new ArrayList<>();
+    
+    public FacturaService() {
+        direcciones.add("E:\\Downloads\\Gym_SegundoMOD\\Casi_Final\\Sis_Gym\\src\\main\\webapp\\factura\\");
+        direcciones.add("C:\\Users\\jano_\\Downloads\\Sis_Gym\\src\\main\\webapp\\factura\\");
+        direcciones.add("C:\\Users\\wtke9\\Downloads\\Sis_Gym\\Sis_Gym\\src\\main\\webapp\\factura\\");
+    }
+    
+    public int create(FacturaDTO facturaDTO) {
+        
+        int codigo = 0;
+        try {
+
+            //Creacion de las dependencias de factura
+            Cliente clienteFactura = clienteService.buscar(facturaDTO.getClienteidCliente());
+            Pago pagoFactura = pagoService.buscar(facturaDTO.getPago());
+            Empleado empleadoFactura = empleadoJPA.findEmpleado(facturaDTO.getEmpleadoidEmpleado());
+            
+            Factura entidad = new Factura();
+            //Asignacion
+            entidad.setClienteidCliente(clienteFactura);
+            entidad.setEmpleadoidEmpleado(empleadoFactura);
+            entidad.setPagoidPago(pagoFactura);
+            entidad.setFechaFin(facturaDTO.getFechaFin());
+            entidad.setFechaInicio(facturaDTO.getFechaInicio());
+            entidad.setSubtotal(facturaDTO.getSubtotal());
+            entidad.setTotal(facturaDTO.getTotal());
+            //Creacion
+            facturaJPA.create(entidad);
+            codigo = entidad.getIdFactura();
+            
+        } catch (Exception e) {
+        }
+        return codigo;
+        
+    }
+    
+    public List<Factura> Listar() {
+        
+        return facturaJPA.findFacturaEntities();
+    }
+    
+    public static void main(String[] args) {
+        try {
+            FacturaService poto = new FacturaService();
+            poto.generarFactura(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+//    public void generarFactura(int num) {
+//        try {
+//            Connection cn = MySQL.getInstance().getConnection();
+//           // String direccion = "C:\\Users\\Daniscarft\\Downloads\\Sis_Gym\\src\\main\\java\\Service\\factura.jrxml";
+//            //String direccion = "E:\\Downloads\\Gym_SegundoMOD\\Actual\\Sis_Gym (2)\\Sis_Gym\\src\\main\\java\\Service\\factura.jrxml";
+//            //String direccion = "E:\\User\\Documentos\\UNI\\VI CICLO\\Criptografia II\\Sistema pyGymfit\\sisGYM ACTUAL\\Sis_Gym\\src\\main\\java\\Service\\factura.jrxml";
+//            String direccion = "C:\\Users\\jano_\\Downloads\\Sis_Gym\\Sis_Gym\\src\\main\\java\\Service\\factura.jrxml";
+//            JasperReport reporte = JasperCompileManager.compileReport(direccion);
+//            Map<String, Object> parametros = new HashMap<>();
+//            parametros.put("idFactura", num);
+//            JasperPrint mostrarReporte = JasperFillManager.fillReport(reporte, parametros, cn);
+//           // String rutaPDF = "C:\\Users\\Daniscarft\\Downloads\\Sis_Gym\\src\\main\\webapp\\factura\\factura" + num + ".pdf";
+//            //String rutaPDF = "E:\\User\\Documentos\\UNI\\VI CICLO\\Criptografia II\\Sistema pyGymfit\\sisGYM ACTUAL\\Sis_Gym\\src\\main\\webapp\\factura\\factura" + num + ".pdf";
+//            String rutaPDF = "C:\\Users\\jano_\\Downloads\\Sis_Gym\\Sis_Gym\\src\\main\\webapp\\factura\\factura" + num + ".pdf";
+//            JasperExportManager.exportReportToPdfFile(mostrarReporte, rutaPDF);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+    public void generarFactura(int num) {
+        try {
+            Connection cn = MySQL.getInstance().getConnection();
+            InputStream inputStream = getClass().getClassLoader().getResourceAsStream("factura.jrxml");
+            if (inputStream == null) {
+                throw new FileNotFoundException("El archivo factura.jrxml no se encontró en el classpath.");
+            }
+            JasperReport reporte = JasperCompileManager.compileReport(inputStream);
+            Map<String, Object> parametros = new HashMap<>();
+            parametros.put("idFactura", num);
+            JasperPrint mostrarReporte = JasperFillManager.fillReport(reporte, parametros, cn);
+            
+            //DIRECION PA LA FACTURA
+            String rutaPDF = direcciones.get(2) + "factura" + num + ".pdf";
+            JasperExportManager.exportReportToPdfFile(mostrarReporte, rutaPDF);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}

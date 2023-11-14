@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <button id="btnCrearCliente">Crear Cliente</button>
+
+        <script>
+            $(document).ready(function () {
+                $('#btnCrearCliente').click(function (e) {
+                    e.preventDefault();
+
+                    const clienteDTO = {
+                        nombre: "prueba2",
+                        apellido: "pruebita2",
+                        dni: "15586134",
+                        telefono: "1234567897",
+                        membresiaID: 1
+                    };
+
+                    const clienteEntidad = {
+                        nombreCliente: "prueba3",
+                        apellidos: "pruebita3",
+                        dni: "11111111",
+                        telefonoCliente: "1234567897"
+                    };
+
+                    const token = "uCwYgxJr1hijbV8xDpyQ6w==";
+                    const usu = "hola";
+
+                    $.ajax({
+                        url: 'http://localhost:8080/Sis_Gym/webresources/entities.cliente',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(clienteEntidad),
+                        headers: {
+                            'token': token,
+                            'usu': usu
+                        },
+                        success: function (response) {
+                            console.log('Cliente creado exitosamente:', response);
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error al crear el cliente:', error);
+                        }
+                    });
+                });
+            });
+
+
+        </script>
+    </body>
+</html>

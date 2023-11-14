@@ -1,0 +1,34 @@
+
+
+.card-table {
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 10px; /* Reduce el relleno para hacerlo más pequeño */
+    margin: 80px auto; /* Ajusta el margen según tus preferencias */
+    width: 80%; /* Ajusta el ancho máximo según tus preferencias */
+}
+
+.inputDNI {
+    padding: 5px;
+    width: 200px; /* Tamaño fijo para el input */
+    border: 2px solid #ccc; /* Cambiado el color del borde a gris */
+    border-radius: 5px;
+    font-size: 18px; /* Aumentado el tamaño de la fuente */
+    margin-right: 10px; /* Agregado margen derecho para separar del botón */
+}
+
+.card-contenido {
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    margin: 80px auto; /* Ajusta el margen superior según tus preferencias */
+    width: 70%;
+    display: flex;
+    align-items: flex-start; /* Alinea el contenido al inicio verticalmente */
+    justify-content: flex-start; /* Alinea el contenido al inicio horizontalmente */
+}
+.card-contenido span {
+    font-size: 25px; /* Aumentado el tamaño de la fuente del span */
+}

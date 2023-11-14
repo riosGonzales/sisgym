@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CODIGO QR</title>
+    <!-- Incluye la biblioteca jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Incluye Bootstrap CSS (asegúrate de que Bootstrap esté configurado en tu proyecto) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    
+    <!-- Estilos personalizados para la imagen y el texto -->
+    <style>
+        .small-image {
+            max-width: 350px; 
+            height: auto;
+        }
+        .card {
+            border-radius: 15px;
+        }
+        .card-header {
+            background-color: #007BFF;
+            color: white;
+            font-weight: bold;
+            border-radius: 15px 15px 0 0;
+        }
+        .btn-primary {
+            background-color: #007BFF;
+            border-color: #007BFF;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+        .card-title {
+            font-size: 50px;
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container d-flex align-items-center justify-content-center" style="min-height: 100vh;">
+        <div class="card">
+            <div class="card-header">
+                <h1 class="card-title mb-0"><center>CODIGO QR</center></h1>
+            </div>
+            <div class="card-body">
+                <div class="card rounded mb-3 text-center">
+                    <div class="card-body">
+                    </div>
+                </div>
+                <button id="btnAceptar" class="btn btn-primary btn-lg btn-block">Aceptar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            // Función para obtener parámetros de la URL
+            function obtenerParametroDeURL(nombre) {
+                const urlSearchParams = new URLSearchParams(window.location.search);
+                return urlSearchParams.get(nombre);
+            }
+
+            // Obtiene el nombre de la imagen de la URL
+            const nombreImagen = obtenerParametroDeURL("logi");
+            const passCifrada = obtenerParametroDeURL("passCifrada");
+
+            if (nombreImagen) {
+                // Construye la URL de la imagen utilizando el nombre recibido
+                const urlImagen = `http://localhost:8080/Sis_Gym/img/qr` + nombreImagen + `.png`;
+
+                // Crea un elemento de imagen y establece su atributo src y clase CSS
+                const imgElement = $('<img>').attr('src', urlImagen).addClass('small-image');
+
+                // Agrega la imagen al contenedor de la tarjeta redondeada
+                $('.card.rounded .card-body').append(imgElement);
+            }
+
+            $("#btnAceptar").click(function () {
+                let params = new URLSearchParams();
+                params.append("logi", nombreImagen);
+                params.append("passCifrada", passCifrada);
+                let url = "Autenticar.html?" + params.toString();
+                $(location).attr('href', url);
+            });
+        });
+    </script>
+</body>
+</html>

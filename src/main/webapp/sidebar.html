@@ -1,0 +1,73 @@
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
+    <ul class="nav">
+        <li class="nav-item nav-category"></li>
+        <li class="nav-item nav-category mt-5">Principal</li>               
+        <li class="nav-item">
+            <a class="nav-link" id="dashboard">
+                <span class="icon-bg"><i class="mdi mdi-view-dashboard menu-icon"></i></span>
+                <span class="menu-title">Dashboard</span>
+            </a>
+        </li>        
+        <li class="nav-item">
+            <a class="nav-link" id="reportes">
+                <span class="icon-bg"><i class="mdi mdi-table-large menu-icon"></i></span>
+                <span class="menu-title">Reportes</span>
+            </a>
+        </li>        
+        <li class="nav-item">
+            <a class="nav-link" id="calendario">
+                <span class="icon-bg"><i class="mdi mdi-calendar menu-icon"></i></span>
+                <span class="menu-title">Clases</span>
+            </a>
+        </li>        
+        <li class="nav-item">
+            <a class="nav-link" id="asistencia">
+                <span class="icon-bg"><i class="mdi mdi-calendar-multiple-check menu-icon"></i></span>
+                <span class="menu-title">Asistencia</span>
+            </a>
+        </li>        
+        <li class="nav-item">
+            <a class="nav-link" id="ventas">
+                <span class="icon-bg"><i class="mdi mdi-cart menu-icon"></i></span>
+                <span class="menu-title">Ventas</span>
+            </a>
+        </li>        
+        <li class="nav-item">
+            <a class="nav-link" id="Inventario">
+                <span class="icon-bg"><i class="mdi mdi-dropbox menu-icon"></i></span>
+                <span class="menu-title">Inventario</span>
+            </a>
+        </li>        
+        <li class="nav-item">
+            <a class="nav-link" id="clientes">
+                <span class="icon-bg"><i class="mdi mdi-account-multiple menu-icon"></i></span>
+                <span class="menu-title">Clientes</span>
+            </a>
+        </li>           
+        <li class="nav-item">
+            <a class="nav-link" href="pages/tables/basic-table.html">
+                <span class="icon-bg"><i class="mdi mdi-settings menu-icon"></i></span>
+                <span class="menu-title">Configuración</span>
+            </a>
+        </li>        
+    </ul>
+</nav>
+<script>
+    $(document).ready(function () {
+        var logi = sessionStorage.getItem("logi");
+        console.log("user:" + logi);
+        $("#calendario").click(function () {
+            let url = "calendario.html?logi=" + logi;
+            $(location).attr('href', url);
+        });
+        $("#asistencia").click(function () {
+            let url = "Asistencia.html?logi=" + logi;
+            $(location).attr('href', url);
+        });
+        $("#clientes").click(function () {
+            let url = "Clientes.html?logi=" + logi;
+            $(location).attr('href', url);
+        });
+        
+    });
+</script>

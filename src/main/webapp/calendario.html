@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Calendario de Clases</title>
+        <!-- Enlaces a CSS y fuentes -->
+        <link rel="stylesheet" href="assets/vendors/mdi/css/materialdesignicons.min.css">
+        <link rel="stylesheet" href="assets/css/style.css">
+        <link href="css/styles.css" rel="stylesheet" type="text/css"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+        <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap">
+        <link rel="stylesheet" href="css/styles.css">
+    </head>
+    <body>
+        <div class="container-fluid page-body-wrapper">
+            <div id="divtopbar"></div>
+            <div id="divsidebar"></div>
+            <div class="wrapper">
+                <header>
+                    <p class="current-date">Calendario de Clases</p>
+                    <div class="icons">
+                        <span id="prev" class="material-symbols-rounded">chevron_left</span>
+                        <span id="next" class="material-symbols-rounded">chevron_right</span>
+                    </div>
+                </header>
+                <div class="calendar">
+                    <ul class="weeks">
+                        <li>Dom</li>
+                        <li>Lun</li>
+                        <li>Mar</li>
+                        <li>Mie</li>
+                        <li>Jue</li>
+                        <li>Vie</li>
+                        <li>Sab</li>
+                    </ul>
+                    <ul class="days"></ul>
+                    <div id="cancelModal" class="modal">
+                        <div class="modal-content">
+                            <p>Acciones: </p>
+                            <span class="close" id="closeModal">&times;</span>
+                            <button class="btn btn-primary" type="button" id="btnVerHorarios">VER HORARIOS</button>
+                            <button class="btn btn-secondary mt-2" type="button" data-dismiss="modal">CANCELAR</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="divFooter"></div>
+        <script src="assets/vendors/js/vendor.bundle.base.js"></script>
+        <script src="assets/vendors/jquery-circle-progress/js/circle-progress.min.js"></script>
+        <script src="assets/js/off-canvas.js"></script>
+        <script src="assets/js/hoverable-collapse.js"></script>
+        <script src="assets/js/misc.js"></script>
+        <script src="assets/js/dashboard.js"></script>
+        <script>
+            $("#divtopbar").load("topbar.html");
+            $("#divsidebar").load("sidebar.html");
+            $("#divFooter").load("footer.html");
+        </script>
+        <script src="js/calendario.js" type="text/javascript"></script>
+    </body>
+</html>
