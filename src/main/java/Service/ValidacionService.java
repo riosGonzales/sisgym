@@ -14,9 +14,9 @@ import security.JwtHelper;
  */
 public class ValidacionService {
 
-    public boolean ValidarToken(String usuFecha, String token) {
+    public boolean ValidarToken(String usuFecha, String tokennnnn) {
 
-        return usuFecha.equals(AES.decrypt(token, "lafedecuto"));
+        return usuFecha.equals(AES.decrypt(tokennnnn, "lafedecuto"));
 
     }
 
