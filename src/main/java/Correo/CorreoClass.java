@@ -5,6 +5,8 @@ import javax.mail.*;
 import javax.mail.internet.*;
 
 public class CorreoClass {
+    
+    //TULEMETELAPAPYA
 
     public static void enviarCorreo(String destinatario, String asunto, String cuerpo) {
         final String username = "muslitofit@gmail.com"; // Cambia por tu dirección de correo
