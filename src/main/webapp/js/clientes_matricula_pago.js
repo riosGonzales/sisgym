@@ -2,13 +2,11 @@
 
 
 $(document).ready(function () {
-    let poto = sessionStorage.getItem('token');
-    let poto2 = sessionStorage.getItem('userFecha');
+    let poto = obtenerCookie('token');
     $("#divtopbar").load("topbar.html");
     $("#divsidebar").load("sidebar.html");
     $("#divFooter").load("footer.html");
     const token = poto;
-    const usu = poto2;
     var idEmpleado = 1;
     var idCliente = 0;
     var idMatricula = 0;
@@ -62,8 +60,7 @@ $(document).ready(function () {
     var table;
 
     const headers = {
-        "token": token,
-        "usu": usu
+        "token": token
     };
 
 

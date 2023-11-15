@@ -1,11 +1,8 @@
 $(document).ready(function () {
-    let poto = sessionStorage.getItem('token');
-    let poto2 = sessionStorage.getItem('userFecha');
-    
-    
+    let poto = obtenerCookie('token');
+       
     
     console.log(poto);
-    console.log(poto2);
     const urlParams = new URLSearchParams(window.location.search);
     const logi = urlParams.get('logi');
     const pass = urlParams.get('passCifrada');

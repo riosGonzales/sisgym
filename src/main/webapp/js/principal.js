@@ -1,12 +1,11 @@
 $(document).ready(function () {
-    let poto = sessionStorage.getItem('token');
-    let poto2 = sessionStorage.getItem('userFecha');
-    console.log("token: "+poto+" logi: "+poto2);
+    let poto = obtenerCookie('token');
+    
+    console.log("token: "+poto+" logi: ");
     const token = poto;
-    const usu = poto2;
+
     const headers = {
-        "token": token,
-        "usu": usu
+        "token": token
     };
     //$("#cambiarClaveForm").hide();
     const urlParams = new URLSearchParams(window.location.search);

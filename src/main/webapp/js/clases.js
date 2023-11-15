@@ -1,10 +1,9 @@
 $(document).ready(function () {
     let table;
-    const token = sessionStorage.getItem('token');
-    const usu = sessionStorage.getItem('userFecha');
+    const token = obtenerCookie('token');
+    
     const headers = {
-        "token": token,
-        "usu": usu
+        "token": token
     };
 
     $("#divtopbar").load("topbar.html");

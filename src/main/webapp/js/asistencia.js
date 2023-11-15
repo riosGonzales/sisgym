@@ -1,12 +1,11 @@
 
 $(document).ready(function () {
     //75626947
-    const token = "uCwYgxJr1hijbV8xDpyQ6w==";
-    const usu = "hola";
+    const token = obtenerCookie('token');
+
     const headers = {
         "Content-Type": "application/json",
-        "token": token,
-        "usu": usu
+        "token": token
     };
     $("#divtopbar").load("topbar.html");
     $("#divsidebar").load("sidebar.html");

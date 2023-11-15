@@ -10,8 +10,8 @@ $(document).ready(function () {
         console.log(passCifrada);
         console.log(fechaActual);
         var requestDataCli = {
-            logiUsua: logi, 
-            passUsua: passCifrada, 
+            logiUsua: logi,
+            passUsua: passCifrada,
             fechUsua: fechaActual
         };
         $.ajax({
@@ -26,13 +26,16 @@ $(document).ready(function () {
                     params.append("passCifrada", passCifrada);
                     let url = "Autenticar.html?" + params.toString();
                     //Seteado en el sesstionStorage
-                    sessionStorage.setItem("token", data.token);
-                    sessionStorage.setItem("userFecha", logi + fechaActual);
-                    sessionStorage.setItem("logi", logi);
+
+                    establecerCookie('token', data.token, 7);
+
+//                    sessionStorage.setItem("token", data.token);
+//                    sessionStorage.setItem("userFecha", logi + fechaActual);
+                   sessionStorage.setItem("logi", logi);
                     console.log(logi);
                     //alert(data.token);
                     //alert(logi+fechaActual);
-                    window.location.href = url;                    
+                    window.location.href = url;
                 } else {
                     // Mostrar mensaje de error y realizar otras acciones si es necesario
                     $("#divAlert").show();

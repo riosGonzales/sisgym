@@ -199,11 +199,10 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
             @FormParam("logi") String logi,
             @FormParam("pass") String pass,
             @FormParam("newpass") String newpass,
-            @HeaderParam("token") String token,
-            @HeaderParam("usu") String usu
+            @HeaderParam("token") String token
     ) throws NonexistentEntityException, UnsupportedEncodingException, Exception {
         {
-            if (vService.ValidarToken(usu, token)) {
+            if (vService.ValidarToken(token)) {
                 return Response.status(Response.Status.OK).entity(jpaUsuario.cambiarPass(logi, pass, newpass)).build(); // Código 200 para solicitud exitosa
 
             } else {
