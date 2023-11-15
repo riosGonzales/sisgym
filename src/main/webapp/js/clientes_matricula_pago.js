@@ -224,6 +224,7 @@ $(document).ready(function () {
                                 setTimeout(function () {
                                     console.log("La factura se generó con éxito."+idFactura);
                                     openWindow(idFactura);
+                                    $("#modalAgregarClase").modal("hide");
                                 }, 5000);
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
@@ -239,6 +240,7 @@ $(document).ready(function () {
                          $("#input1, #input2, #input3 , #lblMembresia, #lblFI,#lblFF,#btnMatricular").show();*/
 
                         console.log('Factura creada exitosamente:', idFactura);
+                        
                     },
                     error: function (xhr, status, error) {
                         console.error('Error al crear la factura', error);
@@ -249,6 +251,7 @@ $(document).ready(function () {
             error: function (xhr, status, error) {
                 console.error('Error al crear el pago:', error);
             }
+            
         });
     }
     );

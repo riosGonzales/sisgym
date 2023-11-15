@@ -1,4 +1,3 @@
-
 package Service;
 
 import Entities.Cliente;
@@ -23,23 +22,24 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 
 public class FacturaService {
-    
+
     FacturaJpaController facturaJPA = new FacturaJpaController();
     ClienteService clienteService = new ClienteService();
     PagoService pagoService = new PagoService();
     EmpleadoJpaController empleadoJPA = new EmpleadoJpaController();
-    
+
     List<String> direcciones = new ArrayList<>();
-    
+
     public FacturaService() {
         direcciones.add("E:\\Downloads\\Gym_SegundoMOD\\Casi_Final\\Sis_Gym\\src\\main\\webapp\\factura\\");
         direcciones.add("C:\\Users\\jano_\\OneDrive\\Documents\\NetBeansProjects\\sisgym\\src\\main\\webapp\\factura\\");
+        direcciones.add("C:\\Users\\Daniscarft\\Documents\\NetBeansProjects\\sisgym\\src\\main\\webapp\\factura\\");
         direcciones.add("E:\\User\\Documentos\\NetBeansProjects\\AAAAAAA\\sisgym\\src\\main\\webapp\\factura\\");
         direcciones.add("C:\\Users\\wtke9\\Downloads\\Sis_Gym\\Sis_Gym\\src\\main\\webapp\\factura\\");
     }
-    
+
     public int create(FacturaDTO facturaDTO) {
-        
+
         int codigo = 0;
         try {
 
@@ -47,7 +47,7 @@ public class FacturaService {
             Cliente clienteFactura = clienteService.buscar(facturaDTO.getClienteidCliente());
             Pago pagoFactura = pagoService.buscar(facturaDTO.getPago());
             Empleado empleadoFactura = empleadoJPA.findEmpleado(facturaDTO.getEmpleadoidEmpleado());
-            
+
             Factura entidad = new Factura();
             //Asignacion
             entidad.setClienteidCliente(clienteFactura);
@@ -60,18 +60,18 @@ public class FacturaService {
             //Creacion
             facturaJPA.create(entidad);
             codigo = entidad.getIdFactura();
-            
+
         } catch (Exception e) {
         }
         return codigo;
-        
+
     }
-    
+
     public List<Factura> Listar() {
-        
+
         return facturaJPA.findFacturaEntities();
     }
-    
+
     public static void main(String[] args) {
         try {
             FacturaService poto = new FacturaService();
@@ -92,7 +92,7 @@ public class FacturaService {
             Map<String, Object> parametros = new HashMap<>();
             parametros.put("idFactura", num);
             JasperPrint mostrarReporte = JasperFillManager.fillReport(reporte, parametros, cn);
-            
+
             //DIRECION PA LA FACTURA
             String rutaPDF = direcciones.get(2) + "factura" + num + ".pdf";
             JasperExportManager.exportReportToPdfFile(mostrarReporte, rutaPDF);
