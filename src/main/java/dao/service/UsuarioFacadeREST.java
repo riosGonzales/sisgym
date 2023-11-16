@@ -3,6 +3,7 @@ package dao.service;
 import authenti.Autenticar;
 import Entities.Usuario;
 import Service.ValidacionService;
+import chat.ClaveGeneratorTXT;
 import chat.node;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -13,7 +14,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import jpa.UsuarioJpaController;
 import jpa.exceptions.NonexistentEntityException;
-import security.AES;
 
 @Stateless
 @Path("dto.usuario")
@@ -35,11 +35,12 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
         node client = new node();
         server.setClavePublicaReceptor(client.getClavePublica());
         client.setClavePublicaReceptor(server.getClavePublica());
-        return "{\"resultado\": \"" + client.claveparaJS + "\"}";
+        ClaveGeneratorTXT.generarYGuardarClave(client.claveparaJS);
+        return ClaveGeneratorTXT.recuperarClave();
     }
 
     public String obtenerClavee() {
-       
+
         return valorFijoClave;
     }
 
@@ -48,7 +49,6 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
     @Produces({MediaType.APPLICATION_JSON})
     public String obtenerClave() {
         return obtenerClavee();
-
     }
 
     @POST
