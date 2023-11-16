@@ -19,7 +19,8 @@ public class ClaveGeneratorTXT {
 
    public static String generarYGuardarClave(String claveCompartida) {
        direcciones.add("C:\\Users\\wtke9\\OneDrive\\Documentos\\NetBeansProjects\\sisgym_\\sisgym\\src\\main\\webapp\\bloc\\clave.txt"); 
-       File archivo = new File(direcciones.get(0));
+       direcciones.add("C:\\Users\\jano_\\OneDrive\\Documents\\NetBeansProjects\\Sis_Gym\\src\\main\\webapp\\bloc\\clave.txt"); 
+       File archivo = new File(direcciones.get(1));
         // Verificar si el archivo está vacío
         if (archivo.length() == 0) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(archivo))) {
@@ -36,7 +37,7 @@ public class ClaveGeneratorTXT {
 
     public static String recuperarClave() {
         StringBuilder claveRecuperada = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new FileReader(direcciones.get(0)))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(direcciones.get(1)))) {
             String linea;
             while ((linea = reader.readLine()) != null) {
                 claveRecuperada.append(linea);
