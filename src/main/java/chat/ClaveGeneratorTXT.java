@@ -17,10 +17,12 @@ public class ClaveGeneratorTXT {
     public ClaveGeneratorTXT() {
     }
 
-   public static String generarYGuardarClave(String claveCompartida) {
-       direcciones.add("C:\\Users\\wtke9\\OneDrive\\Documentos\\NetBeansProjects\\sisgym_\\sisgym\\src\\main\\webapp\\bloc\\clave.txt"); 
-       direcciones.add("C:\\Users\\jano_\\OneDrive\\Documents\\NetBeansProjects\\Sis_Gym\\src\\main\\webapp\\bloc\\clave.txt"); 
-       File archivo = new File(direcciones.get(1));
+    public static String generarYGuardarClave(String claveCompartida) {
+        direcciones.add("C:\\Users\\wtke9\\OneDrive\\Documentos\\NetBeansProjects\\sisgym_\\sisgym\\src\\main\\webapp\\bloc\\clave.txt");
+        direcciones.add("C:\\Users\\Daniscarft\\Documents\\NetBeansProjects\\sisgym\\src\\main\\webapp\\bloc\\clave.txt");
+
+        direcciones.add("C:\\Users\\jano_\\OneDrive\\Documents\\NetBeansProjects\\Sis_Gym\\src\\main\\webapp\\bloc\\clave.txt");
+        File archivo = new File(direcciones.get(1));
         // Verificar si el archivo está vacío
         if (archivo.length() == 0) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(archivo))) {
@@ -45,7 +47,7 @@ public class ClaveGeneratorTXT {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return  "{\"resultado\": \"" +claveRecuperada.toString() + "\"}";
+        return "{\"resultado\": \"" + claveRecuperada.toString() + "\"}";
     }
 
     public static void main(String[] args) {
@@ -53,7 +55,7 @@ public class ClaveGeneratorTXT {
             ClaveGeneratorTXT metodo = new ClaveGeneratorTXT();
             String clave = "zzzz";
             metodo.generarYGuardarClave(clave);
-            System.out.println("texto: " +  metodo.recuperarClave());
+            System.out.println("texto: " + metodo.recuperarClave());
         } catch (Exception e) {
             e.printStackTrace();
         }

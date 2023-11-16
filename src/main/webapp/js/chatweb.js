@@ -23,9 +23,6 @@ function openSocket() {
     };
 }
 
-
-
-
 function send() {
     try {
         alert(clave);
