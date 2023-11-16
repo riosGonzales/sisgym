@@ -19,7 +19,9 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 
 public class AESSecurityCap {
-   private PublicKey clavePublica;
+
+    private PublicKey clavePublica;
+    public String claveparaJS;
 
     // Objeto para el acuerdo de claves ECDH
     KeyAgreement acuerdoClaves;
@@ -33,19 +35,20 @@ public class AESSecurityCap {
     // Constructor
     AESSecurityCap() {
         generarParametrosIntercambioClaves(); // Inicializa los parámetros del intercambio de claves
-//        imprimirClavesGeneradas();
+        System.out.println("Clave pública generada: " + Base64.getEncoder().encodeToString(clavePublica.getEncoded()));
     }
 
     // Inicializa los parámetros del intercambio de claves ECDH
-   private void generarParametrosIntercambioClaves() {
+    private void generarParametrosIntercambioClaves() {
         try {
             // Genera un par de claves para el intercambio de claves ECDH
             KeyPairGenerator generadorParClaves = KeyPairGenerator.getInstance("EC");
-            generadorParClaves.initialize(128);
+            generadorParClaves.initialize(256);
             KeyPair parClaves = generadorParClaves.generateKeyPair();
 
             // Obtiene la clave pública del par de claves
             clavePublica = parClaves.getPublic();
+            System.out.println("Clave privada generada: " + Base64.getEncoder().encodeToString(parClaves.getPrivate().getEncoded()));
 
             // Inicializa el objeto KeyAgreement con la clave privada del par de claves
             acuerdoClaves = KeyAgreement.getInstance("ECDH");
@@ -61,6 +64,9 @@ public class AESSecurityCap {
         try {
             acuerdoClaves.doPhase(clavePublicaReceptor, true);
             secretoCompartido = acuerdoClaves.generateSecret();
+            claveparaJS = Base64.getEncoder().encodeToString(secretoCompartido);
+            System.out.println("Clave secreta compartida generada: " + claveparaJS);
+
         } catch (InvalidKeyException e) {
             e.printStackTrace();
         }
@@ -118,8 +124,5 @@ public class AESSecurityCap {
     protected Key generarClave() {
         return new SecretKeySpec(secretoCompartido, ALGO);
     }
-//     private void imprimirClavesGeneradas() {
-//        System.out.println("Clave privada generada para el intercambio de claves ECDH: " + acuerdoClaves.getPrivate());
-//        System.out.println("Clave pública generada para el intercambio de claves ECDH: " + clavePublica);
-//    }
+
 }

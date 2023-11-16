@@ -3,6 +3,7 @@ package dao.service;
 import authenti.Autenticar;
 import Entities.Usuario;
 import Service.ValidacionService;
+import chat.node;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -22,9 +23,32 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
     private EntityManagerFactory emf = Persistence.createEntityManagerFactory("com.mycompany_Sis_Gym_war_1.0-SNAPSHOTPU");
     UsuarioJpaController jpaUsuario = new UsuarioJpaController();
     ValidacionService vService = new ValidacionService();
+    private static String valorFijoClave = obtenerValorFijoClave(); // Obtener el valor fijo una sola vez
 
     public UsuarioFacadeREST() {
         super(Usuario.class);
+
+    }
+
+    private static String obtenerValorFijoClave() {
+        node server = new node();
+        node client = new node();
+        server.setClavePublicaReceptor(client.getClavePublica());
+        client.setClavePublicaReceptor(server.getClavePublica());
+        return "{\"resultado\": \"" + client.claveparaJS + "\"}";
+    }
+
+    public String obtenerClavee() {
+       
+        return valorFijoClave;
+    }
+
+    @GET
+    @Path("/obtenerClave")
+    @Produces({MediaType.APPLICATION_JSON})
+    public String obtenerClave() {
+        return obtenerClavee();
+
     }
 
     @POST
@@ -187,6 +211,7 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
             @FormParam("passUsua") String passUsua,
             @FormParam("fechUsua") String fechUsua
     ) {
+
         return jpaUsuario.validarUsuario(logiUsua, passUsua, fechUsua);
     }
 
