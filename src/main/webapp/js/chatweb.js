@@ -1,6 +1,7 @@
 var webSocket;
 var messages = document.getElementById("messages");
-
+var logi = sessionStorage.getItem("logi");
+console.log(logi);
 function openSocket() {
     if (webSocket !== undefined && webSocket.readyState !== WebSocket.CLOSED) {
         writeResponse("WebSocket ya está abierto");
@@ -26,7 +27,7 @@ function openSocket() {
 function send() {
     try {
         alert(clave);
-        var usuario = document.getElementById("usuarioinput").value;
+        var usuario = sessionStorage.getItem("logi");
         var text = document.getElementById("messageinput").value;
         var textCifrado = cifradoAES(text, clave);
         var fecha = new Date();
@@ -36,7 +37,7 @@ function send() {
         webSocket.send(smsj);
         document.getElementById("messageinput").value = "";
     } catch (err) {
-        // Manejar errores aquí
+        console.log(err);
     }
 }
 
@@ -53,16 +54,53 @@ function writeResponse(text) {
 }
 
 function writeResponseJSON(text) {
-
     try {
         const msj = JSON.parse(text);
+        const fecha = new Date(msj.fecha);
 
-        messages.innerHTML += "<br/>" + msj.user + " dice: " + descifradoAES(msj.text, clave) + ", " + msj.fecha;
-    } catch (e) {
-        console.log("Mensaje de Error -->" + e);
+        const ahora = new Date();
+        const ayer = new Date(ahora);
+        ayer.setDate(ayer.getDate() - 1);
+
+        let fechaFormateada;
+        if (
+                fecha.getDate() === ahora.getDate() &&
+                fecha.getMonth() === ahora.getMonth() &&
+                fecha.getFullYear() === ahora.getFullYear()
+                ) {
+            fechaFormateada = "hoy a las " + fecha.toLocaleString('es-ES', {hour: '2-digit', minute: '2-digit'});
+        } else if (
+                fecha.getDate() === ayer.getDate() &&
+                fecha.getMonth() === ayer.getMonth() &&
+                fecha.getFullYear() === ayer.getFullYear()
+                ) {
+            fechaFormateada = "ayer a las " + fecha.toLocaleString('es-ES', {hour: '2-digit', minute: '2-digit'});
+        } else {
+            fechaFormateada = fecha.toLocaleString('es-ES', {
+                year: 'numeric',
+                month: 'numeric',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+        }
+
+        const usuarioIniciales = msj.user.slice(0, 3).toUpperCase();
+        messages.innerHTML +=
+                "<li class='chat incoming'>" +
+                "<span class='user-initials' style='font-size: 10px;'>" + "<small>" + usuarioIniciales + "</small>" + "</span>" +
+                "<p>" + "<small>" + msj.user + "</small>" + ":<br/>" +
+                descifradoAES(msj.text, clave) + "<br/>" +
+                "<small class='small-date'>" + fechaFormateada + "</small></p>" +
+                "</li>";
+
+        // Desplaza el scroll hacia abajo hasta el final del contenedor de mensajes
+        chatbox.scrollTop = chatbox.scrollHeight;
+
+    } catch (err) {
+        console.error(err);
     }
-
-
 }
 
 

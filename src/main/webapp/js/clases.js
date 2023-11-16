@@ -1,7 +1,7 @@
 $(document).ready(function () {
     let table;
     const token = obtenerCookie('token');
-    
+
     const headers = {
         "token": token
     };
@@ -9,6 +9,7 @@ $(document).ready(function () {
     $("#divtopbar").load("topbar.html");
     $("#divsidebar").load("sidebar.html");
     $("#divFooter").load("footer.html");
+    $("#chat").load("chat.html");
 
     let fechaCalendario;
 

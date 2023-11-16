@@ -13082,7 +13082,7 @@ dl {
   position: fixed; /* Fija el navbar en la parte superior */
   top: 0;
   width: 100%; /* Ocupa todo el ancho de la ventana */
-  z-index: 999; /* Asegura que el navbar esté por encima del contenido */
+  z-index: 11; /* Asegura que el navbar esté por encima del contenido */
 }
   .navbar .navbar-brand {
     width: 110px; }
@@ -13092,7 +13092,7 @@ dl {
   background: #181824;
   width: 209px;
   height: 64px;
-  z-index: 999; /* Asegura que el logo esté por encima del contenido */
+  z-index: 11; /* Asegura que el logo esté por encima del contenido */
  }
     @media (max-width: 991px) {
       .navbar .navbar-brand-wrapper {
@@ -13130,7 +13130,7 @@ dl {
     color: #111111;
     padding-left: 24px;
     padding-right: 24px;
-    width: calc(100% - 258px);
+    width: calc(100%);
     height: 64px;
   }
     @media (max-width: 991px) {
@@ -13503,7 +13503,8 @@ dl {
   transition: width 0.25s ease, background 0.25s ease;
   display: grid;
   grid-template-rows: auto 1fr auto; /* Define las filas para el sidebar */
-  height: 120vh; /* Hace que el sidebar ocupe el 100% de la altura de la ventana */
+  height: 120vh;
+  position: relative;/* Hace que el sidebar ocupe el 100% de la altura de la ventana */
 }
 
   .sidebar .nav {

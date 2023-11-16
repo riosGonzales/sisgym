@@ -5,24 +5,24 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
         <link href="css/chat.css" rel="stylesheet" type="text/css"/>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0" />
         <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-       
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.js"></script>
+
     </head>
     <body>
         <div class="bottom-right">
             <!-- Botón circular de Bootstrap -->
-            <button id="btnAbrirChat" type="button" class="btn btn-primary btn-circle">
+            <button id="btnAbrirChat" type="button" class="btn btn-primary btn-circle" onclick="openSocket();">
                 <i class="fas fa-comment-dots"></i>
             </button>
         </div>
         <div class="chatbot" id="chatbot" style="display: none;">
             <header>
                 <h2>Chat</h2>
-            </header>
+            </header>           
             <ul class="chatbox" id="chatbox">
                 <div id="messages" class="messages">
                     <li class="chat incoming">
@@ -36,13 +36,7 @@
                 <span id="send-btn" class="material-symbols-rounded" onclick="send();">send</span>
             </div>
         </div>
-         <script>
-            $(document).ready(function () {
-                $("#chatbot").hide();
-                $("#btnAbrirChat").click(function () {
-                    $("#chatbot").show();
-                });
-            });
-        </script>
+        <script src="js/claveCompartida.js" type="text/javascript"></script>
+        <script src="js/chatweb.js" type="text/javascript"></script>
     </body>
 </html>

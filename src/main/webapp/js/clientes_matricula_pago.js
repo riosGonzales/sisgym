@@ -6,6 +6,7 @@ $(document).ready(function () {
     $("#divtopbar").load("topbar.html");
     $("#divsidebar").load("sidebar.html");
     $("#divFooter").load("footer.html");
+    $("#chat").load("chat.html");
     const token = poto;
     var idEmpleado = 1;
     var idCliente = 0;
@@ -222,7 +223,7 @@ $(document).ready(function () {
                             success: function (data, textStatus, jqXHR) {
                                 // La solicitud se completó con éxito (código de respuesta 200)
                                 setTimeout(function () {
-                                    console.log("La factura se generó con éxito."+idFactura);
+                                    console.log("La factura se generó con éxito." + idFactura);
                                     openWindow(idFactura);
                                     $("#modalAgregarClase").modal("hide");
                                 }, 5000);
@@ -240,7 +241,7 @@ $(document).ready(function () {
                          $("#input1, #input2, #input3 , #lblMembresia, #lblFI,#lblFF,#btnMatricular").show();*/
 
                         console.log('Factura creada exitosamente:', idFactura);
-                        
+
                     },
                     error: function (xhr, status, error) {
                         console.error('Error al crear la factura', error);
@@ -251,7 +252,7 @@ $(document).ready(function () {
             error: function (xhr, status, error) {
                 console.error('Error al crear el pago:', error);
             }
-            
+
         });
     }
     );

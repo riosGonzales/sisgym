@@ -10,6 +10,8 @@ $(document).ready(function () {
     $("#divtopbar").load("topbar.html");
     $("#divsidebar").load("sidebar.html");
     $("#divFooter").load("footer.html");
+    $("#chat").load("chat.html");
+
     function registrarAsistencia() {
         var dni = $("#inputDNI").val();
         if (dni.trim() === "") {
