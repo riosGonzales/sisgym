@@ -23,16 +23,19 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
     private EntityManagerFactory emf = Persistence.createEntityManagerFactory("com.mycompany_Sis_Gym_war_1.0-SNAPSHOTPU");
     UsuarioJpaController jpaUsuario = new UsuarioJpaController();
     ValidacionService vService = new ValidacionService();
-    private static String valorFijoClave = obtenerValorFijoClave(); // Obtener el valor fijo una sola vez
+    private String valorFijoClave;// Obtener el valor fijo una sola vez
+    private ClaveGeneratorTXT claveGeneratorTXT = new ClaveGeneratorTXT();
+    node server = new node();
+    node client = new node();
 
     public UsuarioFacadeREST() {
         super(Usuario.class);
+        ClaveGeneratorTXT.borrarContenido();
 
     }
 
-    private static String obtenerValorFijoClave() {
-        node server = new node();
-        node client = new node();
+    private String obtenerValorFijoClave() {
+
         server.setClavePublicaReceptor(client.getClavePublica());
         client.setClavePublicaReceptor(server.getClavePublica());
         ClaveGeneratorTXT.generarYGuardarClave(client.claveparaJS);
@@ -40,7 +43,8 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
     }
 
     public String obtenerClavee() {
-
+        obtenerValorFijoClave();
+        valorFijoClave = ClaveGeneratorTXT.recuperarClave();
         return valorFijoClave;
     }
 
@@ -213,6 +217,7 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
     ) {
 
         return jpaUsuario.validarUsuario(logiUsua, passUsua, fechUsua);
+
     }
 
     //-----------------------------------------------------------------------------------------

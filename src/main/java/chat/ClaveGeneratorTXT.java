@@ -17,15 +17,26 @@ public class ClaveGeneratorTXT {
     public ClaveGeneratorTXT() {
     }
 
-    public static String generarYGuardarClave(String claveCompartida) {
-        direcciones.add("C:\\Users\\wtke9\\OneDrive\\Documentos\\NetBeansProjects\\sisgym_\\sisgym\\src\\main\\webapp\\bloc\\clave.txt");
-        direcciones.add("C:\\Users\\Daniscarft\\Documents\\NetBeansProjects\\sisgym\\src\\main\\webapp\\bloc\\clave.txt");
-
+        public static void borrarContenido() {
+        direcciones.add("C:\\Users\\wtke9\\OneDrive\\Documentos\\NetBeansProjects\\sisgym_\\sisgym\\src\\main\\webapp\\bloc\\clave.txt"); //0
+        direcciones.add("C:\\Users\\Daniscarft\\Documents\\NetBeansProjects\\sisgym\\src\\main\\webapp\\bloc\\clave.txt");      //1
+        direcciones.add("E:\\Proyectos Java\\Cripto 2\\GIT\\pruebaza\\sisgym\\src\\main\\webapp\\bloc\\clave.txt");                //2
         direcciones.add("C:\\Users\\jano_\\OneDrive\\Documents\\NetBeansProjects\\Sis_Gym\\src\\main\\webapp\\bloc\\clave.txt");
-        File archivo = new File(direcciones.get(0));
+        try {
+            try (FileWriter fileWriter = new FileWriter(direcciones.get(2), false)) {
+                fileWriter.write(""); // Escribe una cadena vacía para borrar el contenido
+            } // Escribe una cadena vacía para borrar el contenido
+            System.out.println("Contenido del archivo borrado exitosamente.");
+        } catch (IOException e) {
+            System.out.println("Ocurrió un error al intentar borrar el contenido del archivo: " + e.getMessage());
+        }
+    }
+    public static String generarYGuardarClave(String claveCompartida) {
+
+        File archivo = new File(direcciones.get(2));
         // Verificar si el archivo está vacío
         if (archivo.length() == 0) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(archivo))) {
+            try ( BufferedWriter writer = new BufferedWriter(new FileWriter(archivo))) {
                 writer.write(claveCompartida);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -39,7 +50,7 @@ public class ClaveGeneratorTXT {
 
     public static String recuperarClave() {
         StringBuilder claveRecuperada = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new FileReader(direcciones.get(0)))) {
+        try ( BufferedReader reader = new BufferedReader(new FileReader(direcciones.get(2)))) {
             String linea;
             while ((linea = reader.readLine()) != null) {
                 claveRecuperada.append(linea);
@@ -49,6 +60,8 @@ public class ClaveGeneratorTXT {
         }
         return "{\"resultado\": \"" + claveRecuperada.toString() + "\"}";
     }
+
+
 
     public static void main(String[] args) {
         try {
