@@ -27,6 +27,7 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
     private ClaveGeneratorTXT claveGeneratorTXT = new ClaveGeneratorTXT();
     node server = new node();
     node client = new node();
+    static node bob =new node();
 
     public UsuarioFacadeREST() {
         super(Usuario.class);
@@ -34,16 +35,32 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
 
     }
 
-    private String obtenerValorFijoClave() {
+    public static String obtenerClaveServidor() {
+        return bob.getClavePublicaString();
+    }
+    
+    @GET
+    @Path("/obtenerClaveBob")
+    @Produces({MediaType.APPLICATION_JSON})
+    public String obtenerClaveBob() {
+        String resultado = obtenerClaveServidor();
+        System.out.println("Resultado: " + resultado);
+        return "{\"resultado\": \"" + resultado + "\"}";
+    }
+    
 
-        server.setClavePublicaReceptor(client.getClavePublica());
-        client.setClavePublicaReceptor(server.getClavePublica());
-        ClaveGeneratorTXT.generarYGuardarClave(client.claveparaJS);
+    
+
+    private String obtenerValorFijoClave(String AliceClaveJS) {
+
+        //server.setClavePublicaReceptor(client.getClavePublica());
+        //client.setClavePublicaReceptor(server.getClavePublica());
+        ClaveGeneratorTXT.generarYGuardarClave(AliceClaveJS);
         return ClaveGeneratorTXT.recuperarClave();
     }
 
-    public String obtenerClavee() {
-        obtenerValorFijoClave();
+    public String obtenerClavee(String AliceClaveJS) {
+        obtenerValorFijoClave(AliceClaveJS);
         valorFijoClave = ClaveGeneratorTXT.recuperarClave();
         return valorFijoClave;
     }
@@ -51,8 +68,8 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
     @GET
     @Path("/obtenerClave")
     @Produces({MediaType.APPLICATION_JSON})
-    public String obtenerClave() {
-        return obtenerClavee();
+    public String obtenerClave(@FormParam("AliceClaveJS") String AliceClaveJS) {
+        return obtenerClavee(AliceClaveJS);
     }
 
     @POST

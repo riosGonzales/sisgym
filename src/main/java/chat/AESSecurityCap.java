@@ -38,6 +38,10 @@ public class AESSecurityCap {
         System.out.println("Clave pública generada: " + Base64.getEncoder().encodeToString(clavePublica.getEncoded()));
     }
 
+    public String getClavePublicaString() {
+        return Base64.getEncoder().encodeToString(clavePublica.getEncoded());
+    }
+
     // Inicializa los parámetros del intercambio de claves ECDH
     private void generarParametrosIntercambioClaves() {
         try {

@@ -23,7 +23,7 @@ public class ClaveGeneratorTXT {
         direcciones.add("E:\\Proyectos Java\\Cripto 2\\GIT\\pruebaza\\sisgym\\src\\main\\webapp\\bloc\\clave.txt");                //2
         direcciones.add("C:\\Users\\jano_\\OneDrive\\Documents\\NetBeansProjects\\Sis_Gym\\src\\main\\webapp\\bloc\\clave.txt");
         try {
-            try (FileWriter fileWriter = new FileWriter(direcciones.get(2), false)) {
+            try (FileWriter fileWriter = new FileWriter(direcciones.get(3), false)) {
                 fileWriter.write(""); // Escribe una cadena vacía para borrar el contenido
             } // Escribe una cadena vacía para borrar el contenido
             System.out.println("Contenido del archivo borrado exitosamente.");
@@ -33,7 +33,7 @@ public class ClaveGeneratorTXT {
     }
     public static String generarYGuardarClave(String claveCompartida) {
 
-        File archivo = new File(direcciones.get(2));
+        File archivo = new File(direcciones.get(3));
         // Verificar si el archivo está vacío
         if (archivo.length() == 0) {
             try ( BufferedWriter writer = new BufferedWriter(new FileWriter(archivo))) {
@@ -50,7 +50,7 @@ public class ClaveGeneratorTXT {
 
     public static String recuperarClave() {
         StringBuilder claveRecuperada = new StringBuilder();
-        try ( BufferedReader reader = new BufferedReader(new FileReader(direcciones.get(2)))) {
+        try ( BufferedReader reader = new BufferedReader(new FileReader(direcciones.get(3)))) {
             String linea;
             while ((linea = reader.readLine()) != null) {
                 claveRecuperada.append(linea);

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit this template
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <!-- Libreria crypto-js-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.js"></script>
+    </head>
+    <body>
+        <div>TODO write content</div>
+        <button id="btnPrueba">PRUEBA</button>
+        <button id="btnPrueba2">PRUEBA2</button>
+
+        <script>
+            let claveBob;
+            let claveCompartida;
+
+            $(document).ready(function () {
+
+
+                $.ajax({
+                    type: 'GET',
+                    url: 'http://localhost:8080/Sis_Gym/webresources/dto.usuario/obtenerClaveBob', // Reemplaza esto con la URL real de tu servidor
+                    dataType: 'json',
+                    success: function (response) {
+                        // Manejar la respuesta del servidor
+                        console.log('Resultado:', response.resultado);
+                        // Aquí puedes realizar cualquier acción adicional con la respuesta
+                        claveBob = response.resultado;
+                    },
+                    error: function (error) {
+                        // Manejar errores en la solicitud AJAX
+                        console.error('Error en la solicitud AJAX:', error);
+                    }
+                });
+
+
+
+                $("#btnPrueba").click(function () {
+                    performDiffieHellman2(claveBob);
+                });
+
+                $("#btnPrueba2").click(function () {
+                    $.ajax({
+                        type: "GET",
+                        url: "http://localhost:8080/Sis_Gym/webresources/dto.usuario/obtenerClave",
+                        data: {
+                            "AliceClaveJS": claveCompartida
+                        },
+                        success: function (response) {
+                            // La respuesta del servidor se encuentra en la variable "response"
+                            console.log("Respuesta del servidor:", response);
+
+                            // Puedes realizar otras acciones con la respuesta aquí
+                        },
+                        error: function (error) {
+                            // Maneja el error en caso de que la solicitud falle
+                            console.error("Error en la solicitud AJAX:", error);
+                        }
+                    });
+                });
+
+            });
+
+
+
+
+            function performDiffieHellman2(bobPublicKey) {
+                // Generar par de claves para Alice
+                const alicePrivateKey = CryptoJS.lib.WordArray.random(32);
+                const alicePublicKey = CryptoJS.SHA256(alicePrivateKey).toString();
+
+                // La clave pública de Bob (recibida por Alice)
+                // const bobPublicKey = '<clave_publica_de_bob>'; // Deberías obtener esto de alguna manera en el mundo real
+
+                // Calcular la clave compartida de Alice
+                const aliceSharedKey = CryptoJS.SHA256(alicePrivateKey.toString() + bobPublicKey).toString();
+
+                console.log('Alice Shared Key:', aliceSharedKey);
+                claveCompartida = aliceSharedKey;
+
+                // Devolver la clave pública de Alice para que pueda ser enviada a Bob
+                return alicePublicKey;
+            }
+
+// Llamada a la función
+            const alicePublicKeyToSendToBob = performDiffieHellman2();
+            console.log('Alice Public Key:', alicePublicKeyToSendToBob);
+
+
+        </script>
+    </body>
+
+
+</html>
