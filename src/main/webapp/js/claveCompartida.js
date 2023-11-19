@@ -10,20 +10,20 @@ $(document).ready(function () {
             $("#chatbot").show();
         }
     });
-    $.ajax({
-        url: 'http://localhost:8080/Sis_Gym/webresources/dto.usuario/obtenerClave', // Reemplaza con la URL de tu servicio
-        type: 'GET',
-        dataType: 'json',
-        success: function (data) {
-            // Manipula los datos recibidos aquí
-            console.log('Datos recibidos:', data);
-            // Ejemplo de cómo acceder al campo 'resultado' del JSON
-            clave = data.resultado;
-            console.log('Resultado:', clave);
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            console.error('Error en la solicitud:', textStatus, errorThrown);
-        }
-    });
+//    $.ajax({
+//        url: 'http://localhost:8080/Sis_Gym/webresources/dto.usuario/obtenerClave', // Reemplaza con la URL de tu servicio
+//        type: 'GET',
+//        dataType: 'json',
+//        success: function (data) {
+//            // Manipula los datos recibidos aquí
+//            console.log('Datos recibidos:', data);
+//            // Ejemplo de cómo acceder al campo 'resultado' del JSON
+//            clave = data.resultado;
+//            console.log('Resultado:', clave);
+//        },
+//        error: function (jqXHR, textStatus, errorThrown) {
+//            console.error('Error en la solicitud:', textStatus, errorThrown);
+//        }
+//    });
 });
 

@@ -20,6 +20,7 @@ public class ClaveGeneratorTXT {
         public static void borrarContenido() {
         direcciones.add("C:\\Users\\wtke9\\OneDrive\\Documentos\\NetBeansProjects\\sisgym_\\sisgym\\src\\main\\webapp\\bloc\\clave.txt"); //0
         direcciones.add("C:\\Users\\Daniscarft\\Documents\\NetBeansProjects\\sisgym\\src\\main\\webapp\\bloc\\clave.txt");      //1
+        direcciones.add("E:\\User\\Documentos\\NetBeansProjects\\AAAAAAA\\sisgym\\src\\main\\webapp\\bloc\\clave.txt");
         direcciones.add("E:\\Proyectos Java\\Cripto 2\\GIT\\pruebaza\\sisgym\\src\\main\\webapp\\bloc\\clave.txt");                //2
         direcciones.add("C:\\Users\\jano_\\OneDrive\\Documents\\NetBeansProjects\\Sis_Gym\\src\\main\\webapp\\bloc\\clave.txt");
         try {
@@ -65,10 +66,12 @@ public class ClaveGeneratorTXT {
 
     public static void main(String[] args) {
         try {
-            ClaveGeneratorTXT metodo = new ClaveGeneratorTXT();
-            String clave = "zzzz";
-            metodo.generarYGuardarClave(clave);
-            System.out.println("texto: " + metodo.recuperarClave());
+//            ClaveGeneratorTXT metodo = new ClaveGeneratorTXT();
+//            String clave = "zzzz";
+//            metodo.generarYGuardarClave(clave);
+//            System.out.println("texto: " + metodo.recuperarClave());
+              borrarContenido();
+                  
         } catch (Exception e) {
             e.printStackTrace();
         }

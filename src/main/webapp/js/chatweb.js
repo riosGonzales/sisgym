@@ -1,6 +1,7 @@
 var webSocket;
 var messages = document.getElementById("messages");
 var logi = sessionStorage.getItem("logi");
+var claveObt = sessionStorage.getItem("clave");
 console.log(logi);
 function openSocket() {
     if (webSocket !== undefined && webSocket.readyState !== WebSocket.CLOSED) {
@@ -26,10 +27,10 @@ function openSocket() {
 
 function send() {
     try {
-        alert(clave);
+        alert(claveObt);
         var usuario = sessionStorage.getItem("logi");
         var text = document.getElementById("messageinput").value;
-        var textCifrado = cifradoAES(text, clave);
+        var textCifrado = cifradoAES(text, claveObt);
         var fecha = new Date();
 
         let msj = {user: usuario, text: textCifrado, fecha: fecha};
@@ -91,7 +92,7 @@ function writeResponseJSON(text) {
                 "<li class='chat incoming'>" +
                 "<span class='user-initials' style='font-size: 10px;'>" + "<small>" + usuarioIniciales + "</small>" + "</span>" +
                 "<p>" + "<small>" + msj.user + "</small>" + ":<br/>" +
-                descifradoAES(msj.text, clave) + "<br/>" +
+                descifradoAES(msj.text, claveObt) + "<br/>" +
                 "<small class='small-date'>" + fechaFormateada + "</small></p>" +
                 "</li>";
 

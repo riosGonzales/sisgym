@@ -31,15 +31,18 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
 
     public UsuarioFacadeREST() {
         super(Usuario.class);
+        System.out.println("antes");
         ClaveGeneratorTXT.borrarContenido();
-
+        System.out.println("despues");
     }
 
+    // RETORNA LA CLAVE PÚBLICA :D
     public static String obtenerClaveServidor() {
         System.out.println("Retornandno clave publica de bob...");
         return bob.getClavePublicaString();
     }
     
+    //REST DEL DE ARRIBA :o
     @GET
     @Path("/obtenerClaveBob")
     @Produces({MediaType.APPLICATION_JSON})
@@ -50,24 +53,23 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
         System.out.println("RESULTADO JSON: "+json);
         return json;
     }
-    
-
-    
-
+        
+    // Metodo para guardar y recuperar la clave de alis
     private String obtenerValorFijoClave(String AliceClaveJS) {
-
         //server.setClavePublicaReceptor(client.getClavePublica());
         //client.setClavePublicaReceptor(server.getClavePublica());
         ClaveGeneratorTXT.generarYGuardarClave(AliceClaveJS);
         return ClaveGeneratorTXT.recuperarClave();
     }
 
-    public String obtenerClavee(String AliceClaveJS) {
-        obtenerValorFijoClave(AliceClaveJS);
-        valorFijoClave = ClaveGeneratorTXT.recuperarClave();
+    // Metodo para asignar el valor fijo CLAVE
+    public String obtenerClavee(String AliceClaveJS) {        
+        valorFijoClave = obtenerValorFijoClave(AliceClaveJS);
         return valorFijoClave;
     }
 
+    
+    //REST para los anteriores 2 métodos
     @POST
     @Path("/obtenerClave")
     @Produces({MediaType.APPLICATION_JSON})

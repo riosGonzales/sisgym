@@ -1,3 +1,5 @@
+let clave;
+
 $(document).ready(function () {
     $("#divAlert").hide();
     $("#progressContainer").hide();
@@ -28,14 +30,57 @@ $(document).ready(function () {
                     //Seteado en el sesstionStorage
 
                     establecerCookie('token', data.token, 7);
-
 //                    sessionStorage.setItem("token", data.token);
 //                    sessionStorage.setItem("userFecha", logi + fechaActual);
-                   sessionStorage.setItem("logi", logi);
+                    sessionStorage.setItem("logi", logi);
                     console.log(logi);
                     //alert(data.token);
                     //alert(logi+fechaActual);
-                    window.location.href = url;
+
+                    $.ajax({
+                        type: 'GET',
+                        url: 'http://localhost:8080/Sis_Gym/webresources/dto.usuario/obtenerClaveBob', // Reemplaza esto con la URL real de tu servidor
+                        dataType: 'json',
+                        success: function (response) {
+                            // Manejar la respuesta del servidor
+                            alert('Resultado:' + response.resultado);
+                            // Aquí puedes realizar cualquier acción adicional con la respuesta
+                            let  claveBob = response.resultado;
+                            // Llamar a runDH() para obtener la clave compartida
+                            runDH(claveBob)
+                                    .then(async (aliceSharedKey) => {
+                                        // Hacer la solicitud AJAX con la clave compartida
+                                        $.ajax({
+                                            type: "POST",
+                                            url: "http://localhost:8080/Sis_Gym/webresources/dto.usuario/obtenerClave",
+                                            contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+                                            data: {
+                                                "AliceClaveJS": aliceSharedKey // Utilizar la clave compartida obtenida
+                                            },
+                                            success: function (response) {
+                                                // La respuesta del servidor se encuentra en la variable "response"
+                                                console.log("Respuesta del servidor:", response.resultado);
+                                                sessionStorage.setItem("clave", response.resultado);
+                                                alert(response.resultado);
+                                                window.location.href = url;
+                                                // Puedes realizar otras acciones con la respuesta aquí
+                                            },
+                                            error: function (error) {
+                                                // Maneja el error en caso de que la solicitud falle
+                                                console.error("Error en la solicitud AJAX:", error);
+                                            }
+                                        });
+                                    })
+                                    .catch((error) => {
+                                        console.error("Error al obtener la clave compartida:", error);
+                                      });
+
+                        },
+                        error: function (error) {
+                            // Manejar errores en la solicitud AJAX
+                            console.error('Error en la solicitud AJAX:', error);
+                        }
+                    });
                 } else {
                     // Mostrar mensaje de error y realizar otras acciones si es necesario
                     $("#divAlert").show();
@@ -69,8 +114,4 @@ $(document).ready(function () {
             }
         });
     });
-
-
-
-
 });
