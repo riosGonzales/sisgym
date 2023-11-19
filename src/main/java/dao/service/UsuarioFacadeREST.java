@@ -36,6 +36,7 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
     }
 
     public static String obtenerClaveServidor() {
+        System.out.println("Retornandno clave publica de bob...");
         return bob.getClavePublicaString();
     }
     
@@ -44,8 +45,10 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
     @Produces({MediaType.APPLICATION_JSON})
     public String obtenerClaveBob() {
         String resultado = obtenerClaveServidor();
-        System.out.println("Resultado: " + resultado);
-        return "{\"resultado\": \"" + resultado + "\"}";
+        System.out.println("Resultado clave publica BOB: " + resultado);
+        String json = "{\"resultado\": \"" + resultado + "\"}";
+        System.out.println("RESULTADO JSON: "+json);
+        return json;
     }
     
 
@@ -65,7 +68,7 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
         return valorFijoClave;
     }
 
-    @GET
+    @POST
     @Path("/obtenerClave")
     @Produces({MediaType.APPLICATION_JSON})
     public String obtenerClave(@FormParam("AliceClaveJS") String AliceClaveJS) {

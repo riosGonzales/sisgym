@@ -24,21 +24,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
             $(document).ready(function () {
 
 
-                $.ajax({
-                    type: 'GET',
-                    url: 'http://localhost:8080/Sis_Gym/webresources/dto.usuario/obtenerClaveBob', // Reemplaza esto con la URL real de tu servidor
-                    dataType: 'json',
-                    success: function (response) {
-                        // Manejar la respuesta del servidor
-                        console.log('Resultado:', response.resultado);
-                        // Aquí puedes realizar cualquier acción adicional con la respuesta
-                        claveBob = response.resultado;
-                    },
-                    error: function (error) {
-                        // Manejar errores en la solicitud AJAX
-                        console.error('Error en la solicitud AJAX:', error);
-                    }
-                });
+
 
 
 
@@ -46,25 +32,46 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
                     performDiffieHellman2(claveBob);
                 });
 
-                $("#btnPrueba2").click(function () {
-                    $.ajax({
-                        type: "GET",
-                        url: "http://localhost:8080/Sis_Gym/webresources/dto.usuario/obtenerClave",
-                        data: {
-                            "AliceClaveJS": claveCompartida
-                        },
-                        success: function (response) {
-                            // La respuesta del servidor se encuentra en la variable "response"
-                            console.log("Respuesta del servidor:", response);
 
-                            // Puedes realizar otras acciones con la respuesta aquí
+                $("#btnPrueba2").click(function () {
+
+                    $.ajax({
+                        type: 'GET',
+                        url: 'http://localhost:8080/Sis_Gym/webresources/dto.usuario/obtenerClaveBob', // Reemplaza esto con la URL real de tu servidor
+                        dataType: 'json',
+                        success: function (response) {
+                            // Manejar la respuesta del servidor
+                            alert('Resultado:'+ response.resultado);
+                            // Aquí puedes realizar cualquier acción adicional con la respuesta
+                            claveBob = response.resultado;
                         },
                         error: function (error) {
-                            // Maneja el error en caso de que la solicitud falle
-                            console.error("Error en la solicitud AJAX:", error);
+                            // Manejar errores en la solicitud AJAX
+                            console.error('Error en la solicitud AJAX:', error);
                         }
                     });
+
                 });
+
+
+                /*    $.ajax({
+                 type: "GET",
+                 url: "http://localhost:8080/Sis_Gym/webresources/dto.usuario/obtenerClave",
+                 data: {
+                 "AliceClaveJS": claveCompartida
+                 },
+                 success: function (response) {
+                 // La respuesta del servidor se encuentra en la variable "response"
+                 console.log("Respuesta del servidor:", response);
+                 
+                 // Puedes realizar otras acciones con la respuesta aquí
+                 },
+                 error: function (error) {
+                 // Maneja el error en caso de que la solicitud falle
+                 console.error("Error en la solicitud AJAX:", error);
+                 }
+                 });*/
+
 
             });
 
@@ -90,8 +97,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
             }
 
 // Llamada a la función
-            const alicePublicKeyToSendToBob = performDiffieHellman2();
-            console.log('Alice Public Key:', alicePublicKeyToSendToBob);
+            // const alicePublicKeyToSendToBob = performDiffieHellman2();
+            //console.log('Alice Public Key:', alicePublicKeyToSendToBob);
 
 
         </script>
