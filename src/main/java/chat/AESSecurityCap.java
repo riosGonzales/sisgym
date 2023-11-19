@@ -42,7 +42,7 @@ public class AESSecurityCap {
         return Base64.getEncoder().encodeToString(clavePublica.getEncoded());
     }
 
-    // Inicializa los parámetros del intercambio de claves ECDH
+    // Inicializa los parámetros del intercambio de claves EC   DH
     private void generarParametrosIntercambioClaves() {
         try {
             // Genera un par de claves para el intercambio de claves ECDH

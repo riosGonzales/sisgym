@@ -2,6 +2,7 @@ package dao.service;
 
 import authenti.Autenticar;
 import Entities.Usuario;
+import Service.ClaveCompartidaSingleton;
 import Service.ValidacionService;
 import chat.ClaveGeneratorTXT;
 import chat.node;
@@ -27,13 +28,13 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
     private ClaveGeneratorTXT claveGeneratorTXT = new ClaveGeneratorTXT();
     node server = new node();
     node client = new node();
-    static node bob =new node();
+    static node bob = new node();
 
     public UsuarioFacadeREST() {
         super(Usuario.class);
-        System.out.println("antes");
+//        System.out.println("antes");
         ClaveGeneratorTXT.borrarContenido();
-        System.out.println("despues");
+//        System.out.println("despues");
     }
 
     // RETORNA LA CLAVE PÚBLICA :D
@@ -41,7 +42,7 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
         System.out.println("Retornandno clave publica de bob...");
         return bob.getClavePublicaString();
     }
-    
+
     //REST DEL DE ARRIBA :o
     @GET
     @Path("/obtenerClaveBob")
@@ -50,10 +51,10 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
         String resultado = obtenerClaveServidor();
         System.out.println("Resultado clave publica BOB: " + resultado);
         String json = "{\"resultado\": \"" + resultado + "\"}";
-        System.out.println("RESULTADO JSON: "+json);
+        System.out.println("RESULTADO JSON: " + json);
         return json;
     }
-        
+
     // Metodo para guardar y recuperar la clave de alis
     private String obtenerValorFijoClave(String AliceClaveJS) {
         //server.setClavePublicaReceptor(client.getClavePublica());
@@ -63,18 +64,39 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
     }
 
     // Metodo para asignar el valor fijo CLAVE
-    public String obtenerClavee(String AliceClaveJS) {        
+    public String obtenerClaveMETODO(String AliceClaveJS) {
         valorFijoClave = obtenerValorFijoClave(AliceClaveJS);
         return valorFijoClave;
     }
 
-    
     //REST para los anteriores 2 métodos
+//    @POST
+//    @Path("/obtenerClave")
+//    @Produces({MediaType.APPLICATION_JSON})
+//    public String obtenerClave(@FormParam("AliceClaveJS") String AliceClaveJS) {
+//        return obtenerClavee(AliceClaveJS);
+//    }
     @POST
     @Path("/obtenerClave")
     @Produces({MediaType.APPLICATION_JSON})
-    public String obtenerClave(@FormParam("AliceClaveJS") String AliceClaveJS) {
-        return obtenerClavee(AliceClaveJS);
+    public String obtenerClaveREST(@FormParam("AliceClaveJS") String AliceClaveJS) {
+        ClaveCompartidaSingleton singleton = ClaveCompartidaSingleton.getInstance();
+        String claveCompartida = singleton.getClaveCompartida();
+
+        // Verificar si la clave ya existe
+        if (!claveCompartida.isEmpty()) {
+            System.out.println("Singleton no vacio");
+            return claveCompartida; // Devuelve la clave existente sin generar una nueva
+        }
+        System.out.println("Singleton  vacio");
+
+        // Generar una nueva clave si no existe
+        System.out.println("Antes de:");
+        String nuevaClave = obtenerClaveMETODO(AliceClaveJS); // Método para generar la nueva clave
+        System.out.println("Clave de alice");
+        singleton.setClaveCompartida(nuevaClave); // Guarda la nueva clave en el Singleton
+        System.out.println(nuevaClave);
+        return obtenerClaveMETODO(AliceClaveJS);
     }
 
     @POST
