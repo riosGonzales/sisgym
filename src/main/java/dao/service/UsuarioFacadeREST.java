@@ -2,6 +2,7 @@ package dao.service;
 
 import authenti.Autenticar;
 import Entities.Usuario;
+import Service.ClaveCompartidaSingleton;
 import Service.ValidacionService;
 import chat.node;
 import java.io.UnsupportedEncodingException;
@@ -23,10 +24,11 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
     UsuarioJpaController jpaUsuario = new UsuarioJpaController();
     ValidacionService vService = new ValidacionService();
     static node bob = new node();
-    
 
     public UsuarioFacadeREST() {
         super(Usuario.class);
+//        System.out.println("antes");
+//        System.out.println("despues");
     }
 
 // RETORNA LA CLAVE PÚBLICA :D
@@ -48,6 +50,13 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
     }
 
 
+    //REST para los anteriores 2 métodos
+//    @POST
+//    @Path("/obtenerClave")
+//    @Produces({MediaType.APPLICATION_JSON})
+//    public String obtenerClave(@FormParam("AliceClaveJS") String AliceClaveJS) {
+//        return obtenerClavee(AliceClaveJS);
+//    }
     @POST
     @Path("/obtenerClave")
     @Produces({MediaType.APPLICATION_JSON})
