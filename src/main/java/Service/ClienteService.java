@@ -172,7 +172,6 @@ public class ClienteService {
 
         for (Cliente cliente : ListaClientes()) {
             if (cliente.getIdCliente() <= 5 && cliente.getEstaClie() == 1) {
-
                 CorreoClass.enviarCorreo(cliente.getEmailClie(), asunto, cuerpo);
 
             }
