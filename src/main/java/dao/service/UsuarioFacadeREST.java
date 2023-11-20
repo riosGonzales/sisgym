@@ -3,7 +3,6 @@ package dao.service;
 import authenti.Autenticar;
 import Entities.Usuario;
 import Service.ValidacionService;
-import chat.ClaveGeneratorTXT;
 import chat.node;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -23,25 +22,19 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
     private EntityManagerFactory emf = Persistence.createEntityManagerFactory("com.mycompany_Sis_Gym_war_1.0-SNAPSHOTPU");
     UsuarioJpaController jpaUsuario = new UsuarioJpaController();
     ValidacionService vService = new ValidacionService();
-    private String valorFijoClave;// Obtener el valor fijo una sola vez
-    private ClaveGeneratorTXT claveGeneratorTXT = new ClaveGeneratorTXT();
-    node server = new node();
-    node client = new node();
-    static node bob =new node();
+    static node bob = new node();
+    
 
     public UsuarioFacadeREST() {
         super(Usuario.class);
-        System.out.println("antes");
-        ClaveGeneratorTXT.borrarContenido();
-        System.out.println("despues");
     }
 
-    // RETORNA LA CLAVE PÚBLICA :D
+// RETORNA LA CLAVE PÚBLICA :D
     public static String obtenerClaveServidor() {
         System.out.println("Retornandno clave publica de bob...");
         return bob.getClavePublicaString();
     }
-    
+
     //REST DEL DE ARRIBA :o
     @GET
     @Path("/obtenerClaveBob")
@@ -50,31 +43,34 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
         String resultado = obtenerClaveServidor();
         System.out.println("Resultado clave publica BOB: " + resultado);
         String json = "{\"resultado\": \"" + resultado + "\"}";
-        System.out.println("RESULTADO JSON: "+json);
+        System.out.println("RESULTADO JSON: " + json);
         return json;
     }
-        
-    // Metodo para guardar y recuperar la clave de alis
-    private String obtenerValorFijoClave(String AliceClaveJS) {
-        //server.setClavePublicaReceptor(client.getClavePublica());
-        //client.setClavePublicaReceptor(server.getClavePublica());
-        ClaveGeneratorTXT.generarYGuardarClave(AliceClaveJS);
-        return ClaveGeneratorTXT.recuperarClave();
-    }
 
-    // Metodo para asignar el valor fijo CLAVE
-    public String obtenerClavee(String AliceClaveJS) {        
-        valorFijoClave = obtenerValorFijoClave(AliceClaveJS);
-        return valorFijoClave;
-    }
 
-    
-    //REST para los anteriores 2 métodos
     @POST
     @Path("/obtenerClave")
     @Produces({MediaType.APPLICATION_JSON})
-    public String obtenerClave(@FormParam("AliceClaveJS") String AliceClaveJS) {
-        return obtenerClavee(AliceClaveJS);
+    public String obtenerClaveREST(@FormParam("AliceClaveJS") String AliceClaveJS) {
+        ClaveCompartidaSingleton singleton = ClaveCompartidaSingleton.getInstance();
+        String claveCompartida = singleton.getClaveCompartida();
+        String rpta;
+        // Verificar si la clave ya existe
+        if (!claveCompartida.isEmpty()) {
+            System.out.println("Singleton no vacio: " + claveCompartida);
+            rpta = "{\"resultado\": \"" + claveCompartida + "\"}";
+            return rpta; // Devuelve la clave existente sin generar una nueva
+        }
+        System.out.println("Singleton  vacio");
+
+        // Generar una nueva clave si no existe
+        System.out.println("Antes de:");
+        String nuevaClave = AliceClaveJS; // Método para generar la nueva clave
+        System.out.println("Clave de alice compartida.: " + nuevaClave);
+        singleton.setClaveCompartida(nuevaClave); // Guarda la nueva clave en el Singleton
+        //  System.out.println(nuevaClave);
+        rpta = "{\"resultado\": \"" + nuevaClave + "\"}";
+        return rpta;
     }
 
     @POST

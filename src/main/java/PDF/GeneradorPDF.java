@@ -39,7 +39,7 @@ public class GeneradorPDF {
 
         try {
             //String rutaPDF = "C:\\Users\\Daniscarft\\Downloads\\Sis_Gym\\Sis_Gym\\src\\main\\webapp\\reporte\\Registro.pdf";
-            String rutaPDF = direcciones.get(2);
+            String rutaPDF = direcciones.get(3);
             PdfWriter.getInstance(document, new FileOutputStream(rutaPDF));
             document.open();
 

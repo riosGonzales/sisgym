@@ -28,7 +28,8 @@ body {
     position: fixed;
     right: 35px;
     bottom: 90px;
-    width: 420px;
+    height: 470px;
+    width: 380px;
     background: #fff;
     border-radius: 15px;
     box-shadow: 0 0 128px 0 rgba(0,0,0,0.1),

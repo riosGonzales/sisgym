@@ -142,7 +142,7 @@ public class ClienteService {
 
     customThreadPool.submit(() ->
         clientes.parallelStream()
-                .filter(cliente -> cliente.getIdCliente() <= 5)
+                .filter(cliente -> cliente.getIdCliente() <= 6)
                 .forEach(cliente -> {
                     String email = cliente.getEmailClie();
                     if (correosProcesados.add(email)) {

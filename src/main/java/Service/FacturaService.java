@@ -94,7 +94,7 @@ public class FacturaService {
             JasperPrint mostrarReporte = JasperFillManager.fillReport(reporte, parametros, cn);
 
             //DIRECION PA LA FACTURA
-            String rutaPDF = direcciones.get(2) + "factura" + num + ".pdf";
+            String rutaPDF = direcciones.get(3) + "factura" + num + ".pdf";
             JasperExportManager.exportReportToPdfFile(mostrarReporte, rutaPDF);
         } catch (Exception e) {
             e.printStackTrace();

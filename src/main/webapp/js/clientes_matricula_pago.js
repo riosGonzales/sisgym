@@ -6,7 +6,7 @@ $(document).ready(function () {
     $("#divtopbar").load("topbar.html");
     $("#divsidebar").load("sidebar.html");
     $("#divFooter").load("footer.html");
-    $("#chat").load("chat.html");
+   $("#chat").load("chat.html");
     const token = poto;
     var idEmpleado = 1;
     var idCliente = 0;

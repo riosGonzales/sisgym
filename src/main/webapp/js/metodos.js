@@ -1,4 +1,3 @@
-
 function cifrar(message) {
     var pass = CryptoJS.SHA256(message);
     var hashHex = pass.toString(CryptoJS.enc.Hex);
@@ -33,6 +32,14 @@ function obtenerCookie(nombre) {
     }
     return null; // Devuelve null si no se encuentra la cookie   
 }
+
+/*La función calculateSharedKey realiza los siguientes pasos:
+ 
+ Genera una clave privada para Alice utilizando el algoritmo de intercambio de claves de Diffie-Hellman elíptico (ECDH) con una curva elíptica de 256 bits.
+ Importa la clave pública de Bob, que previamente ha sido codificada en base64 y luego convertida al formato necesario para ser importada
+ como una clave pública. Utiliza las claves de Alice y Bob para derivar una clave compartida utilizando el algoritmo ECDH,
+ y esta clave compartida se define como una clave para el algoritmo de cifrado simétrico AES-GCM de 256 bits.
+ Exporta la clave compartida en formato raw y la convierte a base64 para ser retornada como resultado.*/
 
 async function calculateSharedKey(bobPublicKeyBase64) {
     // Generar claves de Alice
