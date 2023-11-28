@@ -1,5 +1,8 @@
 let clave;
-
+let respuestalogueo = "invalido";
+let codiUsua;
+let tipoUsua;
+let logiUsuaGen;
 $(document).ready(function () {
     $("#divAlert").hide();
     $("#progressContainer").hide();
@@ -22,6 +25,10 @@ $(document).ready(function () {
             data: requestDataCli,
             success: function (data) {
                 if (data.resultado === "valido") {
+                    respuestalogueo = "ok";
+                    codiUsua = data.codiUsua;
+                    tipoUsua = data.tipoUsua;
+                    logiUsuaGen = data.logiUsua;
                     console.log("Token generado:" + data.token);
                     let params = new URLSearchParams();
                     params.append("logi", logi);
@@ -58,11 +65,24 @@ $(document).ready(function () {
                                                 "AliceClaveJS": aliceSharedKey // Utilizar la clave compartida obtenida
                                             },
                                             success: function (response) {
-                                                // La respuesta del servidor se encuentra en la variable "response"
-                                                console.log("Respuesta del servidor:", response.resultado);
-                                                sessionStorage.setItem("clave", response.resultado);
-                                                alert(response.resultado);
-                                                window.location.href = url;
+
+                                                if (respuestalogueo === "ok") {
+                                                    $.getJSON("registrarsesion", {codi: codiUsua, logi: logiUsuaGen,
+                                                        tipoUsuario: tipoUsua}, function (data) {
+                                                        // La respuesta del servidor se encuentra en la variable "response"
+                                                        console.log("Respuesta del servidor:", response.resultado);
+                                                        sessionStorage.setItem("clave", response.resultado);
+                                                        alert(response.resultado);
+                                                        window.location.href = url;
+                                                    });
+
+                                                } else {
+
+                                                    mostrarMensaje("alerta", "NO HAS INICIADO SESION");
+                                                }
+
+
+
                                                 // Puedes realizar otras acciones con la respuesta aquí
                                             },
                                             error: function (error) {

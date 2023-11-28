@@ -108,7 +108,14 @@ public class UsuarioJpaController implements Serializable {
                 //String token = AES.encrypt(UsuarioYFecha, "lafedecuto");
                 System.out.println(token);
                 int idEmpleado = usuario.getEmpleadoidEmpleado().getIdEmpleado();
-                return "{\"resultado\":\"valido\", \"token\":\"" + token + "\", \"idEmpleado\":\"" + idEmpleado + "\"}";
+                int  codiUsua = usuario.getCodiUsua();
+                String tipoUsua = usuario.getTipoUsuario();
+               
+            String jsonResultado = "{\"resultado\":\"valido\", \"token\":\"" + token +
+                    "\", \"idEmpleado\":\"" + idEmpleado +
+                    "\", \"codiUsua\":\"" + codiUsua + "\", \"logiUsua\":\"" +
+                    logiUsua + "\", \"tipoUsua\":\"" + tipoUsua + "\"}";
+            return jsonResultado;
             } else {
                 return "{\"resultado\":\"no_valido_usuario_null\"}";
             }
