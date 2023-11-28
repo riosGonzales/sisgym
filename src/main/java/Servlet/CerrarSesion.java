@@ -4,7 +4,7 @@
  */
 package Servlet;
 
-import Session.Session;
+import Session.Sesion;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -15,10 +15,10 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author anshi
+ * @author Daniscarft
  */
-@WebServlet(name = "RegistrarSesion", urlPatterns = {"/registrarsesion"})
-public class RegistrarSesion extends HttpServlet {
+@WebServlet(name = "CerrarSesion", urlPatterns = {"/cerrarSesion"})
+public class CerrarSesion extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -33,11 +33,8 @@ public class RegistrarSesion extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            String codi=request.getParameter("codi");
-            String logi=request.getParameter("logi");
-            String tipoUsuario = request.getParameter("tipoUsuario");
-            Session.crearsesion(request.getSession(true),Integer.parseInt(codi),logi,tipoUsuario);
-            out.print("{\"resultado\":\"ok\"}");
+            Sesion.eliminarSesion(request.getSession());
+                out.print("{\"resultado\":\"ok\"}");
         }
     }
 

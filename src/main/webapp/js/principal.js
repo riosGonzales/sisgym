@@ -1,4 +1,6 @@
 $(document).ready(function () {
+    
+      
     let poto = obtenerCookie('token');
     
     console.log("token: "+poto+" logi: ");

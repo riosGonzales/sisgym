@@ -4,6 +4,7 @@
  */
 package Servlet;
 
+import Session.Sesion;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -33,25 +34,10 @@ public class validarsesion extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-  try{
-            HttpSession session = request.getSession(true);             
-            String logueado =session.getAttribute("logueado").toString();
-            String codi=session.getAttribute("codi").toString();
-            String logi=session.getAttribute("logi").toString();
-            String tipoUsuario =session.getAttribute("tipoUsuario").toString();
-            if (logueado==null) {                               
-                out.println("{\"resultado\":\"error\"}");                
-            }
-            else{               
-                if(session.getAttribute("logueado").toString().equals("1")){
-                    out.println("{\"resultado\":\"ok\",\"codi\":\""+codi+"\",\"logi\":\""+logi+"\",\"nivel\":\""+tipoUsuario+"\"}");                
-                }
-                else{
-                    out.println("{\"resultado\":\"error\"}");                
-                }
-            }}
-            catch(Exception ex){
-                        out.println("{\"resultado\":\"error\"}");                
+            if (Sesion.validoOK(request.getSession()) == true) {
+                out.print("{\"resultado\":\"ok\"}");
+            } else {
+                out.print("{\"resultado\":\"error\"}");
             }
         }
     }

@@ -1,15 +1,13 @@
-let clave;
-let respuestalogueo = "invalido";
-let codiUsua;
-let tipoUsua;
-let logiUsuaGen;
+
 $(document).ready(function () {
+    
     $("#divAlert").hide();
     $("#progressContainer").hide();
 
     $("#btnIniciar").click(function () {
         let logi = $("#txtUsuario").val();
-        let pass = $("#txtClave").val();
+         let pass= $("#txtClave").val();
+
         let passCifrada = cifrar(pass);
         var fechaActual = moment().format('YYYY-MM-DD HH:mm:ss').toString();
         console.log(passCifrada);
@@ -25,10 +23,7 @@ $(document).ready(function () {
             data: requestDataCli,
             success: function (data) {
                 if (data.resultado === "valido") {
-                    respuestalogueo = "ok";
-                    codiUsua = data.codiUsua;
-                    tipoUsua = data.tipoUsua;
-                    logiUsuaGen = data.logiUsua;
+                   
                     console.log("Token generado:" + data.token);
                     let params = new URLSearchParams();
                     params.append("logi", logi);
@@ -66,24 +61,13 @@ $(document).ready(function () {
                                             },
                                             success: function (response) {
 
-                                                if (respuestalogueo === "ok") {
-                                                    $.getJSON("registrarsesion", {codi: codiUsua, logi: logiUsuaGen,
-                                                        tipoUsuario: tipoUsua}, function (data) {
-                                                        // La respuesta del servidor se encuentra en la variable "response"
-                                                        console.log("Respuesta del servidor:", response.resultado);
-                                                        sessionStorage.setItem("clave", response.resultado);
-                                                        alert(response.resultado);
-                                                        window.location.href = url;
-                                                    });
 
-                                                } else {
+                                                // La respuesta del servidor se encuentra en la variable "response"
+                                                console.log("Respuesta del servidor:", response.resultado);
+                                                sessionStorage.setItem("clave", response.resultado);
+                                                alert(response.resultado);
+                                                window.location.href = url;
 
-                                                    mostrarMensaje("alerta", "NO HAS INICIADO SESION");
-                                                }
-
-
-
-                                                // Puedes realizar otras acciones con la respuesta aquí
                                             },
                                             error: function (error) {
                                                 // Maneja el error en caso de que la solicitud falle

@@ -4,12 +4,15 @@ import authenti.Autenticar;
 import Entities.Usuario;
 import Service.ClaveCompartidaSingleton;
 import Service.ValidacionService;
+import Session.Sesion;
 import chat.node;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.*;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import jpa.UsuarioJpaController;
@@ -232,19 +235,20 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
     }
 
     //------------------------------------------------------------------------------------------------------------------------------
-    @POST
-    @Path("validarUsuario")
-    @Produces({MediaType.APPLICATION_JSON})
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public String validarUsuario(
-            @FormParam("logiUsua") String logiUsua,
-            @FormParam("passUsua") String passUsua,
-            @FormParam("fechUsua") String fechUsua
-    ) {
+   @POST
+@Path("validarUsuario")
+@Produces({MediaType.APPLICATION_JSON})
+@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+public String validarUsuario(
+        @Context HttpServletRequest request,
+        @FormParam("logiUsua") String logiUsua,
+        @FormParam("passUsua") String passUsua,
+        @FormParam("fechUsua") String fechUsua
+) {
+    Sesion.crearSesion(request.getSession());
+    return jpaUsuario.validarUsuario(logiUsua, passUsua, fechUsua);
+}
 
-        return jpaUsuario.validarUsuario(logiUsua, passUsua, fechUsua);
-
-    }
 
     //-----------------------------------------------------------------------------------------
     @PUT
