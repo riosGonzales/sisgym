@@ -38,10 +38,10 @@ public class JwtHelper {
                 .parseClaimsJws(token)
                 .getBody();
     }
-    
+
     public static void main(String[] args) {
-        String aas = generateToken("rivero");        
-        System.out.println(aas); 
-        System.out.println("a - " + decodeToken(aas)); 
+        String aas = generateToken("rivero");
+        System.out.println(aas);
+        System.out.println("a - " + decodeToken(aas));
     }
 }

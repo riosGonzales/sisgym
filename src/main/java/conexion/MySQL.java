@@ -22,6 +22,7 @@ public class MySQL {
     }
 
     public Connection getConnection() {
+        System.out.println("CONECTA A LA BD PARA REPORTE");
         return connection;
     }
 

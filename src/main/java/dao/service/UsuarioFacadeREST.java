@@ -31,7 +31,7 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
 //        System.out.println("despues");
     }
 
-// RETORNA LA CLAVE PÚBLICA :D
+// RETORNA LA CLAVE PÚBLICA DEL SERVIDOR :D
     public static String obtenerClaveServidor() {
         System.out.println("Retornandno clave publica de bob...");
         return bob.getClavePublicaString();
@@ -48,7 +48,6 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
         System.out.println("RESULTADO JSON: " + json);
         return json;
     }
-
 
     //REST para los anteriores 2 métodos
 //    @POST

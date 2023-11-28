@@ -22,16 +22,15 @@ public class ValidacionService {
 
     public boolean ValidarToken(String token) {
 
- 
         try {
-             Claims claims = JwtHelper.decodeToken(token);
-             System.out.println("Acceso autorizado: " + claims.getSubject());
-             return true;
-             
+            Claims claims = JwtHelper.decodeToken(token);
+            System.out.println("Acceso autorizado: " + claims.getSubject());
+            return true;
+
         } catch (Exception e) {
             return false;
         }
-        
+
     }
 
     public static void main(String[] args) {

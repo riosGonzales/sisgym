@@ -32,7 +32,7 @@ public class FacturaService {
 
     public FacturaService() {
         direcciones.add("E:\\Downloads\\Gym_SegundoMOD\\Casi_Final\\Sis_Gym\\src\\main\\webapp\\factura\\");
-        direcciones.add("C:\\Users\\jano_\\OneDrive\\Documents\\NetBeansProjects\\sisgym\\src\\main\\webapp\\factura\\");
+        direcciones.add("C:\\Users\\jano_\\OneDrive\\Documents\\NetBeansProjects\\Sis_Gym\\src\\main\\webapp\\factura\\");
         direcciones.add("C:\\Users\\Daniscarft\\Documents\\NetBeansProjects\\sisgym\\src\\main\\webapp\\factura\\");
         direcciones.add("E:\\User\\Documentos\\NetBeansProjects\\AAAAAAA\\sisgym\\src\\main\\webapp\\factura\\");
         direcciones.add("C:\\Users\\wtke9\\Downloads\\Sis_Gym\\Sis_Gym\\src\\main\\webapp\\factura\\");
@@ -75,7 +75,7 @@ public class FacturaService {
     public static void main(String[] args) {
         try {
             FacturaService poto = new FacturaService();
-            poto.generarFactura(1);
+            poto.generarFactura(29);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -94,10 +94,11 @@ public class FacturaService {
             JasperPrint mostrarReporte = JasperFillManager.fillReport(reporte, parametros, cn);
 
             //DIRECION PA LA FACTURA
-            String rutaPDF = direcciones.get(3) + "factura" + num + ".pdf";
+            String rutaPDF = direcciones.get(1) + "factura" + num + ".pdf";
             JasperExportManager.exportReportToPdfFile(mostrarReporte, rutaPDF);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 }

@@ -1,5 +1,5 @@
-
 package Service;
+
 public class ClaveCompartidaSingleton {
 
     private static ClaveCompartidaSingleton instancia;
