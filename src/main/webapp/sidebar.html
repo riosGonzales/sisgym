@@ -7,9 +7,9 @@
         </li>
         <li class="nav-item nav-category mt-5">Principal</li>               
         <li class="nav-item">
-            <a class="nav-link" id="dashboard">
+            <a class="nav-link" id="prueba">
                 <span class="icon-bg"><i class="mdi mdi-view-dashboard menu-icon"></i></span>
-                <span class="menu-title">Dashboard</span>
+                <span class="menu-title">Prueba</span>
             </a>
         </li>        
         <li class="nav-item">
@@ -70,6 +70,10 @@
         });
         $("#clientes").click(function () {
             let url = "Clientes.html?logi=" + logi;
+            $(location).attr('href', url);
+        });
+        $("#prueba").click(function () {
+            let url = "Prueba.html?logi=" + logi;
             $(location).attr('href', url);
         });
     });
