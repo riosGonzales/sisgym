@@ -5,6 +5,8 @@ $(document).ready(function () {
             $(location).attr('href', "index.html");
 
         } else {
+            $("#divAlert").hide();
+             $("#divAlert2").hide();
             // Obtener parámetros de la URL y cookies
             const urlParams = new URLSearchParams(window.location.search);
             const logi = urlParams.get('logi');
