@@ -1,9 +1,11 @@
 $(document).ready(function () {
     $.getJSON("validarsesion", function (data) {
-        
+
         if (data.resultado === "error") {
             $(location).attr('href', "index.html");
         } else {
+
+
             let poto = obtenerCookie('token');
 
             console.log("token: " + poto + " logi: ");
@@ -80,6 +82,21 @@ $(document).ready(function () {
                 let url = "cambiarClave.html?" + params.toString();
                 window.location.href = url;
             });
+
+            $('.dropdown-item').on('click', function () {
+                // Acciones a realizar cuando se hace clic en el elemento <a>
+                $.getJSON("cerrarSesion", function (data) {
+                    alert("click");
+                    if (data.resultado === "ok") {
+                        $(location).attr('href', "index.html");
+                    }else{
+                        alert("Error al cerrar sesion");
+                    }
+                });
+                // Puedes agregar aquí cualquier acción que desees realizar al hacer clic en el enlace
+            });
+
+
         }
     });
 
