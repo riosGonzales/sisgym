@@ -34,7 +34,7 @@ public class validarsesion extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            if (Sesion.validoOK(request.getSession()) == true) {
+            if (Sesion.validoOK(request.getSession())) {
                 out.print("{\"resultado\":\"ok\"}");
             } else {
                 out.print("{\"resultado\":\"error\"}");
