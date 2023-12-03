@@ -50,7 +50,6 @@ public class ClasesFacadeREST extends AbstractFacade<Clases> {
 
         } else {
             return Response.status(Response.Status.UNAUTHORIZED).entity("Error: Token no válido").build(); // Código 401 para no autorizado
-
         }
     }
 
