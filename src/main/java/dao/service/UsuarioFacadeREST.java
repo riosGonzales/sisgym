@@ -6,6 +6,8 @@ import Service.ClaveCompartidaSingleton;
 import Service.ValidacionService;
 import Session.Sesion;
 import chat.node;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -235,20 +237,33 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
     }
 
     //------------------------------------------------------------------------------------------------------------------------------
-   @POST
-@Path("validarUsuario")
-@Produces({MediaType.APPLICATION_JSON})
-@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-public String validarUsuario(
-        @Context HttpServletRequest request,
-        @FormParam("logiUsua") String logiUsua,
-        @FormParam("passUsua") String passUsua,
-        @FormParam("fechUsua") String fechUsua
-) {
-    Sesion.crearSesion(request.getSession());
-    return jpaUsuario.validarUsuario(logiUsua, passUsua, fechUsua);
-}
+    @POST
+    @Path("validarUsuario")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public String validarUsuario(
+            @Context HttpServletRequest request,
+            @FormParam("logiUsua") String logiUsua,
+            @FormParam("passUsua") String passUsua,
+            @FormParam("fechUsua") String fechUsua
+    ) {
+        //Guardar en una variable la respuesta de la validacion
+        //el metodo validarUsuario es lo que devuelve los atributos que nosotros queremos
+        //en este caso elegi el tipoUsua
+        String rpta = jpaUsuario.validarUsuario(logiUsua, passUsua, fechUsua);
+        //Convertir del string a un objeto json
+        JsonObject jsonObject = new Gson().fromJson(rpta, JsonObject.class);
+        //obtenemos el valor de tipoUsua del json
+        String tipoUsuaValue = jsonObject.get("tipoUsua").getAsString();
 
+        //Añadimos el tipoUsua a ña  sesion
+        Sesion.crearSesion(request.getSession(), tipoUsuaValue);
+        //devolvemos lo que necesitamos en la validacion
+        
+        //Partes afectadas
+        //servlet validarSesion y Autenticar.js
+        return rpta;
+    }
 
     //-----------------------------------------------------------------------------------------
     @PUT

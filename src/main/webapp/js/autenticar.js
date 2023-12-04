@@ -5,8 +5,11 @@ $(document).ready(function () {
             $(location).attr('href', "index.html");
 
         } else {
+
             $("#divAlert").hide();
-             $("#divAlert2").hide();
+            $("#divAlert2").hide();
+            //mostramos el atributo de sesion "tipoUsua" de la sesion
+            alert("Tipo de Usuario: " + data.tipoUsua);
             // Obtener parámetros de la URL y cookies
             const urlParams = new URLSearchParams(window.location.search);
             const logi = urlParams.get('logi');

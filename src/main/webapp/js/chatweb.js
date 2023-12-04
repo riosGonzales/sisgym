@@ -1,3 +1,4 @@
+
 var webSocket;
 var messages = document.getElementById("messages");
 var logi = sessionStorage.getItem("logi");
@@ -103,6 +104,7 @@ function writeResponseJSON(text) {
         console.error(err);
     }
 }
+
 
 
 function cifradoAES(mensaje, clave) {

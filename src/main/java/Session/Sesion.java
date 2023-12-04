@@ -4,17 +4,15 @@ import javax.servlet.http.HttpSession;
 
 public class Sesion {
 
-    public static void crearSesion(HttpSession sesion) {
+    public static void crearSesion(HttpSession sesion,String tipoUsua) {
         sesion.setAttribute("valido", "ok");
+         sesion.setAttribute("tipoUsua", tipoUsua);
     }
 
     public static boolean validoOK(HttpSession sesion) {
         try {
             String valido = sesion.getAttribute("valido").toString();
-            if (valido.equals("ok")) {
-                return true;
-            }
-            return false;
+            return valido.equals("ok");
         } catch (Exception e) {
             return false;
         }
