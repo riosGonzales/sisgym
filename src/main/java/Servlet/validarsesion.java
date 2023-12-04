@@ -14,10 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-/**
- *
- * @author wtke9
- */
 @WebServlet(name = "validarsesion", urlPatterns = {"/validarsesion"})
 public class validarsesion extends HttpServlet {
 
@@ -34,8 +30,13 @@ public class validarsesion extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            if (Sesion.validoOK(request.getSession())) {
-                out.print("{\"resultado\":\"ok\"}");
+            HttpSession sesion = request.getSession();
+            //en el if verificamos que la sesion este activa
+            if (Sesion.validoOK(sesion)) {
+                //obtenemos el atributo tipoUsua de la sesion
+                String tipoUsua = sesion.getAttribute("tipoUsua").toString();
+                //Devolvemos el atributo en caso en el fronted la queremos usar
+                out.println("{\"resultado\":\"ok\",\"tipoUsua\":\"" + tipoUsua + "\"}");
             } else {
                 out.print("{\"resultado\":\"error\"}");
             }
