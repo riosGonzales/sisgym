@@ -258,7 +258,6 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
 
         //Añadimos el tipoUsua a ña  sesion
         Sesion.crearSesion(request.getSession(), tipoUsuaValue);
-        //devolvemos lo que necesitamos en la validacion
         
         //Partes afectadas
         //servlet validarSesion y Autenticar.js
