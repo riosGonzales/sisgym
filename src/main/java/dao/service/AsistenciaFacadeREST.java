@@ -18,6 +18,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -37,12 +38,23 @@ public class AsistenciaFacadeREST extends AbstractFacade<Asistencia> {
     ValidacionService validacion = new ValidacionService();
     AsistenciaService asistenciaService = new AsistenciaService();
     ClienteService clienteService = new ClienteService();
+    Cliente cliente = new Cliente();
 
     @PersistenceContext(unitName = "com.mycompany_Sis_Gym_war_1.0-SNAPSHOTPU")
     private EntityManager em;
 
     public AsistenciaFacadeREST() {
         super(Asistencia.class);
+    }
+
+    @OPTIONS
+    public Response optionsCrear() {
+        return Response.ok()
+                .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+                .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization, token")
+                .header("Access-Control-Allow-Credentials", "true")
+                .build();
     }
 
     @POST
@@ -53,7 +65,18 @@ public class AsistenciaFacadeREST extends AbstractFacade<Asistencia> {
                 Cliente cliente = clienteService.buscarDNI(entidad.getClienteidCliente());
                 if (cliente != null) {
                     asistenciaService.crear(entidad);
-                    return Response.status(Response.Status.OK).entity("Asistencia creada correctamente").build();
+                    String nombre = cliente.getNombreCliente();
+                    String apellido = cliente.getApellidos();
+                    String respuesta = "{\"nombreCliente\": \"" + nombre + "\", \"apellidos\": \"" + apellido + "\"}";
+
+                    return Response
+                            .status(Response.Status.OK)
+                            .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                            .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+                            .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization, token")
+                            .header("Access-Control-Allow-Credentials", "true")
+                            .entity(respuesta)
+                            .build();
                 } else {
                     return Response.status(Response.Status.NOT_FOUND).entity("Cliente no encontrado").build();
                 }

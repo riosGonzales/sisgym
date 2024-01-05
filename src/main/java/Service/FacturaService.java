@@ -35,7 +35,7 @@ public class FacturaService {
         direcciones.add("C:\\Users\\jano_\\OneDrive\\Documents\\NetBeansProjects\\Sis_Gym\\src\\main\\webapp\\factura\\");
         direcciones.add("C:\\Users\\Daniscarft\\Documents\\NetBeansProjects\\sisgym\\src\\main\\webapp\\factura\\");
         direcciones.add("E:\\User\\Documentos\\NetBeansProjects\\AAAAAAA\\sisgym\\src\\main\\webapp\\factura\\");
-        direcciones.add("C:\\Users\\wtke9\\Downloads\\Sis_Gym\\Sis_Gym\\src\\main\\webapp\\factura\\");
+        direcciones.add("C:\\Users\\wtke9\\OneDrive\\Documentos\\NetBeansProjects\\sisgym_\\sisgym\\src\\main\\webapp\\factura\\");
     }
 
     public int create(FacturaDTO facturaDTO) {

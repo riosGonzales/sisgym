@@ -41,7 +41,6 @@ public class JwtHelper {
 
     public static void main(String[] args) {
         String aas = generateToken("rivero");
-        System.out.println(aas);
         System.out.println("a - " + decodeToken(aas));
     }
 }

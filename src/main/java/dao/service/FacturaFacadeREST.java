@@ -10,10 +10,10 @@ import dto.FacturaDTO;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -32,14 +32,31 @@ public class FacturaFacadeREST extends AbstractFacade<Factura> {
         super(Factura.class);
     }
 
+    @OPTIONS
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public Response optionscrear() {
+        return Response
+                .status(Response.Status.OK)
+                .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+                .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
+                .header("Access-Control-Allow-Credentials", "true")
+                .build();
+    }
+
     @POST
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response crear(FacturaDTO facturaDTO) {
         int codigo = 0;
         try {
             codigo = facturaService.create(facturaDTO);
-            return Response.status(Response.Status.OK).entity(codigo).build();
-
+            return Response
+                    .status(Response.Status.OK)
+                    .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                    .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+                    .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
+                    .header("Access-Control-Allow-Credentials", "true")
+                    .entity(codigo).build();
         } catch (Exception e) {
             return Response.status(Response.Status.EXPECTATION_FAILED).entity(codigo).build();
 
@@ -80,12 +97,30 @@ public class FacturaFacadeREST extends AbstractFacade<Factura> {
         return super.findRange(new int[]{from, to});
     }
 
+    
+    @OPTIONS
+    @Path("generarFactura/{idFactura}")
+    public Response optionsgenerarFactura() {
+        return Response.ok()
+                .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+                .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
+                .header("Access-Control-Allow-Credentials", "true")
+                .build();
+    }
+
     @GET
     @Path("generarFactura/{idFactura}")
     public Response generarFactura(@PathParam("idFactura") Integer idFactura) {
         try {
             facturaService.generarFactura(idFactura);
-            return Response.status(Response.Status.OK).build();
+            return Response
+                    .status(Response.Status.OK)
+                    .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                    .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+                    .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
+                    .header("Access-Control-Allow-Credentials", "true")
+                    .build();
         } catch (Exception e) {
             return Response.status(Response.Status.EXPECTATION_FAILED).build();
         }

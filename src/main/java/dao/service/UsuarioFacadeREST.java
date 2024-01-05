@@ -153,11 +153,17 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
     }
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+    @OPTIONS
+    @Path("asociarLlave")
+    public Response handleOptionsAsociarLlave() {
+        return buildCORSResponse("valido");
+    }
+
     @PUT
     @Path("asociarLlave")
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public String asociarLlave(
+    public Response asociarLlave(
             @FormParam("logi") String logi,
             @FormParam("pass") String pass
     ) throws NonexistentEntityException {
@@ -173,51 +179,65 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
                     String autenticado = Autenticar.asociarLlave(usuario);
                     usuario.setToknUsua(autenticado);
                     edit(usuario.getCodiUsua(), usuario);
-                    return "{\"resultado\":\"valido\"}";
+                    return buildCORSResponse("{\"resultado\":\"valido\"}");
                 } else {
-                    return "{\"resultado\":\"QR ya existente\"}";
+                    return buildCORSResponse("{\"resultado\":\"no_valido\"}");
                 }
             } else {
-                return "{\"resultado\":\"no_valido\"}";
+                return buildCORSResponse("{\"resultado\":\"no_valido\"}");
             }
         } catch (NoResultException e) {
-            return "{\"resultado\":\"no_valido\"}";
+            return buildCORSResponse("{\"resultado\":\"no_valido\"}");
         } finally {
             em.close();
         }
     }
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    private Response buildCORSResponse(String jsonResponse) {
+        return Response.ok(jsonResponse)
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+                .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
+                .header("Access-Control-Allow-Credentials", "true")
+                .build();
+    }
+
+    @OPTIONS
+    @Path("autenticarCodigo")
+    public Response handleOptionsAutenticarCodigo() {
+        return buildCORSResponse("valido");
+    }
+
     @PUT
     @Path("autenticarCodigo")
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public String autenticarCodigo(
-            @FormParam("logi") String logi,
-            @FormParam("pass") String pass,
-            @FormParam("codigo") String codigo
-    ) throws NonexistentEntityException {
-        EntityManager em = emf.createEntityManager();
+    public Response autenticarCodigo(@Context HttpServletRequest request,
+            @FormParam("logi") String logi, @FormParam("pass") String pass,
+            @FormParam("codigo") String codigo) throws NonexistentEntityException {
         try {
+            EntityManager em = emf.createEntityManager();
             em.getTransaction().begin();
+
             Usuario usuario = em.createNamedQuery("Usuario.validar", Usuario.class)
                     .setParameter("logiUsua", logi)
                     .setParameter("passUsua", pass)
                     .getSingleResult();
+
             if (usuario != null) {
                 boolean autenticarCodigo = Autenticar.autenticarCodigo(usuario, codigo);
+
                 if (autenticarCodigo) {
-                    return "{\"resultado\":\"valido\"}";
+                    return buildCORSResponse("{\"resultado\":\"valido\"}");
                 } else {
-                    return "{\"resultado\":\"no_valido\"}";
+                    return buildCORSResponse("{\"resultado\":\"no_valido\"}");
                 }
             } else {
-                return "{\"resultado\":\"no_valido\"}";
+                return buildCORSResponse("{\"resultado\":\"no_valido\"}");
             }
         } catch (NoResultException e) {
-            return "{\"resultado\":\"no_valido\"}";
-        } finally {
-            em.close();
+            return buildCORSResponse("{\"resultado\":\"no_valido\"}");
         }
     }
 
@@ -237,32 +257,30 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
     }
 
     //------------------------------------------------------------------------------------------------------------------------------
-    @POST
-    @Path("validarUsuario")
-    @Produces({MediaType.APPLICATION_JSON})
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public String validarUsuario(
-            @Context HttpServletRequest request,
-            @FormParam("logiUsua") String logiUsua,
-            @FormParam("passUsua") String passUsua,
-            @FormParam("fechUsua") String fechUsua
-    ) {
-        //Guardar en una variable la respuesta de la validacion
-        //el metodo validarUsuario es lo que devuelve los atributos que nosotros queremos
-        //en este caso elegi el tipoUsua
+@POST
+@Path("validarUsuario")
+@Produces({MediaType.APPLICATION_JSON})
+@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+public Response validarUsuario(
+        @Context HttpServletRequest request,
+        @FormParam("logiUsua") String logiUsua,
+        @FormParam("passUsua") String passUsua,
+        @FormParam("fechUsua") String fechUsua
+) {
+    try {
         String rpta = jpaUsuario.validarUsuario(logiUsua, passUsua, fechUsua);
-        //Convertir del string a un objeto json
         JsonObject jsonObject = new Gson().fromJson(rpta, JsonObject.class);
-        //obtenemos el valor de tipoUsua del json
         String tipoUsuaValue = jsonObject.get("tipoUsua").getAsString();
-
-        //Añadimos el tipoUsua a ña  sesion
         Sesion.crearSesion(request.getSession(), tipoUsuaValue);
-        
-        //Partes afectadas
-        //servlet validarSesion y Autenticar.js
-        return rpta;
+
+        // Retornar la respuesta directamente con CORS
+        return buildCORSResponse(rpta);
+    } catch (Exception e) {
+        // Manejar el error y retornar una respuesta CORS
+        return buildCORSResponse("{\"resultado\":\"no_valido\"}");
     }
+}
+
 
     //-----------------------------------------------------------------------------------------
     @PUT

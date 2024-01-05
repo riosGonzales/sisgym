@@ -13,6 +13,8 @@
     <class>Entities.Matricula</class>
     <class>Entities.Clases</class>
     <class>Entities.Prueba</class>
+    <class>Entities.Rol</class>
+    <class>Entities.Rolusuario</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/sisgym2?zeroDateTimeBehavior=CONVERT_TO_NULL"/>

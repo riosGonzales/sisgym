@@ -9,7 +9,8 @@ $(document).ready(function () {
             $("#divAlert").hide();
             $("#divAlert2").hide();
             //mostramos el atributo de sesion "tipoUsua" de la sesion
-            alert("Tipo de Usuario: " + data.tipoUsua);
+            console.log("Tipo de Usuario: " + data.tipoUsua);
+            sessionStorage.setItem("Tipo", data.tipoUsua);
             // Obtener parámetros de la URL y cookies
             const urlParams = new URLSearchParams(window.location.search);
             const logi = urlParams.get('logi');
@@ -177,11 +178,7 @@ $(document).ready(function () {
                     $("#divAlert").hide();
                 }, 5000);
             }
-
         }
-
     });
-
-
 });
 

@@ -36,7 +36,9 @@ public class ApplicationConfig extends Application {
         resources.add(dao.service.MembresiaFacadeREST.class);
         resources.add(dao.service.PagoFacadeREST.class);
         resources.add(dao.service.PruebaFacadeREST.class);
+        resources.add(dao.service.RolusuarioFacadeREST.class);
         resources.add(dao.service.UsuarioFacadeREST.class);
+        resources.add(dao.service.service.RolFacadeREST.class);
     }
     
 }

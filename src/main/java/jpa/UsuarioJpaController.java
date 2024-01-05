@@ -13,6 +13,7 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import jpa.exceptions.NonexistentEntityException;
@@ -92,7 +93,7 @@ public class UsuarioJpaController implements Serializable {
         }
     }
 
-    public String validarUsuario(String logiUsua, String passUsua, String fecha) {
+public String validarUsuario(String logiUsua, String passUsua, String fecha) {
         EntityManager em = getEntityManager();
         try {
             Usuario usuario = em.createNamedQuery("Usuario.validar", Usuario.class)

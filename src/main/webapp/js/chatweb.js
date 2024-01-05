@@ -1,4 +1,4 @@
-
+let tipo = sessionStorage.getItem("Tipo");
 var webSocket;
 var messages = document.getElementById("messages");
 var logi = sessionStorage.getItem("logi");
@@ -34,7 +34,7 @@ function send() {
         var textCifrado = cifradoAES(text, claveObt);
         var fecha = new Date();
 
-        let msj = {user: usuario, text: textCifrado, fecha: fecha};
+        let msj = {user: usuario, tipo:tipo, text: textCifrado, fecha: fecha};
         let smsj = JSON.stringify(msj);
         webSocket.send(smsj);
         document.getElementById("messageinput").value = "";
@@ -92,7 +92,7 @@ function writeResponseJSON(text) {
         messages.innerHTML +=
                 "<li class='chat incoming'>" +
                 "<span class='user-initials' style='font-size: 10px;'>" + "<small>" + usuarioIniciales + "</small>" + "</span>" +
-                "<p>" + "<small>" + msj.user + "</small>" + ":<br/>" +
+                "<p>" + "<small>" + msj.user + "(" + msj.tipo + ")" +"</small>" + ":<br/>" +
                 descifradoAES(msj.text, claveObt) + "<br/>" +
                 "<small class='small-date'>" + fechaFormateada + "</small></p>" +
                 "</li>";

@@ -1,14 +1,12 @@
-
-
-
 $(document).ready(function () {
     let poto = obtenerCookie('token');
     $("#divtopbar").load("topbar.html");
     $("#divsidebar").load("sidebar.html");
     $("#divFooter").load("footer.html");
-   $("#chat").load("chat.html");
+    $("#chat").load("chat.html");
     const token = poto;
     var idEmpleado = 1;
+    var table;
     var idCliente = 0;
     var idMatricula = 0;
     var idPago = 0;
@@ -18,6 +16,19 @@ $(document).ready(function () {
     var fechaFinGlobal;
     var idFactura = 0;
     var idClienteOperacion = 0;
+    const headers = {
+        "token": token
+    };
+    const MEMBRESIAS_COSTO = {
+        1: 150,
+        2: 250,
+        3: 59
+    };
+    const MEMBRESIAS_TIEMPO_MESES = {
+        1: 3,
+        2: 5,
+        3: 1
+    };
 
     // Evento cuando se cambia la fecha de inicio
     $("#input2").on("change", function () {
@@ -57,15 +68,6 @@ $(document).ready(function () {
         const fechaFin = momentFechaInicio.format('YYYY-MM-DD');
         $("#input3").val(fechaFin);
     });
-
-    var table;
-
-    const headers = {
-        "token": token
-    };
-
-
-    //cargarRegistros();
 
     function cargarDatosEnTabla() {
         $.ajax({
@@ -153,19 +155,6 @@ $(document).ready(function () {
         idClienteOperacion = 0;
     });
 
-
-
-    const MEMBRESIAS_COSTO = {
-        1: 150,
-        2: 250,
-        3: 59
-    };
-
-    const MEMBRESIAS_TIEMPO_MESES = {
-        1: 3,
-        2: 5,
-        3: 1
-    };
     function openWindow(id) {
         try {
             window.open("http://localhost:8080/Sis_Gym/factura/factura" + id + ".pdf", 'factura', 'width=800, height=600');
@@ -301,7 +290,6 @@ $(document).ready(function () {
             method: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(Matricula),
-            headers: headers,
             success: function (response) {
                 fechaInicioGlobal = fechaInicio;
                 fechaFinGlobal = fechaFin;
@@ -362,29 +350,7 @@ $(document).ready(function () {
         };
 
         if (idClienteOperacion === 0) {
-            $.ajax({
-                url: 'http://localhost:8080/Sis_Gym/webresources/entities.cliente',
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(ClienteM),
-                headers: headers,
-                success: function (response) {
-                    idCliente = response;
-                    console.log(idCliente);
-
-                    $("#titulo").text("Matricula");
-                    $("#dni, #nombres, #apellidos, #correo, #telefono, #lblDNI, #lblApellidos, #lblNombres,#lblCorreo, #lblTelefono,#btnRegistrar", ).hide();
-
-                    $("#input1, #input2, #input3 , #lblMembresia, #lblFI,#lblFF,#btnMatricular").show();
-                    console.log('Cliente creado exitosamente:', response);
-                    cargarDatosEnTabla();
-
-                    //table.ajax.reload();
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error al crear el cliente:', error);
-                }
-            });
+            crearCliente(ClienteM);
         } else {
 
             $.ajax({
@@ -435,7 +401,29 @@ $(document).ready(function () {
         });
     });
 
+    function crearCliente(ClienteM) {
+        $.ajax({
+            url: 'http://localhost:8080/Sis_Gym/webresources/entities.cliente',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(ClienteM),
+            headers: headers,
+            success: function (response) {
+                idCliente = response;
+                console.log(idCliente);
 
+                $("#titulo").text("Matricula");
+                $("#dni, #nombres, #apellidos, #correo, #telefono, #lblDNI, #lblApellidos, #lblNombres,#lblCorreo, #lblTelefono,#btnRegistrar").hide();
+
+                $("#input1, #input2, #input3 , #lblMembresia, #lblFI,#lblFF,#btnMatricular").show();
+                console.log('Cliente creado exitosamente:', response);
+                cargarDatosEnTabla();
+            },
+            error: function (xhr, status, error) {
+                console.error('Error al crear el cliente:', error);
+            }
+        });
+    }
 
     function openReporte() {
         try {
@@ -453,3 +441,7 @@ $("#modalAgregarClase").on('hidden.bs.modal', function (e) {
     $("#input1, #input2, #input3, #lblMembresia, #lblFI, #lblFF, #btnMatricular").hide();
     $("#lblPago, #cboMetoPago, #lblMonto, #txtMonto, #btnPagar").hide();
 });
+
+
+
+

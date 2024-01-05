@@ -1,8 +1,9 @@
-package dao.service;
+package dao.service.service;
 
-import Entities.Clases;
 import Entities.Prueba;
+import Entities.Rol;
 import Service.PruebaService;
+import Service.RolService;
 import Service.ValidacionService;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -21,7 +22,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import jpa.PruebaJpaController;
+import jpa.RolJpaController;
 import jpa.exceptions.NonexistentEntityException;
 
 /**
@@ -29,22 +30,22 @@ import jpa.exceptions.NonexistentEntityException;
  * @author wtke9
  */
 @Stateless
-@Path("entities.prueba")
-public class PruebaFacadeREST extends AbstractFacade<Prueba> {
+@Path("entities.rol")
+public class RolFacadeREST extends AbstractFacade<Rol> {
 
     @PersistenceContext(unitName = "com.mycompany_Sis_Gym_war_1.0-SNAPSHOTPU")
     private EntityManagerFactory em = Persistence.createEntityManagerFactory("com.mycompany_Sis_Gym_war_1.0-SNAPSHOTPU");
     ValidacionService vs = new ValidacionService();
-    PruebaService pruebaService = new PruebaService();
-    PruebaJpaController objPrueba = new PruebaJpaController();
+    RolService pruebaService = new RolService();
+    RolJpaController objPrueba = new RolJpaController();
 
-    public PruebaFacadeREST() {
-        super(Prueba.class);
+    public RolFacadeREST() {
+        super(Rol.class);
     }
 
     @POST
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Response crear(Prueba entity, @HeaderParam("token") String token) {
+    public Response crear(Rol entity, @HeaderParam("token") String token) throws Exception {
         if (vs.ValidarToken(token)) {
             objPrueba.create(entity);
             return Response.status(Response.Status.OK).build(); // Código 200 para solicitud exitosa
@@ -56,7 +57,7 @@ public class PruebaFacadeREST extends AbstractFacade<Prueba> {
     @PUT
     @Path("{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Response edit(@PathParam("id") Integer id, Prueba entity, @HeaderParam("token") String token) throws Exception {
+    public Response edit(@PathParam("id") Integer id, Rol entity, @HeaderParam("token") String token) throws Exception {
         if (vs.ValidarToken(token)) {
             objPrueba.edit(entity);
             return Response.status(Response.Status.OK).build(); // Código 200 para solicitud exitosa
@@ -67,25 +68,26 @@ public class PruebaFacadeREST extends AbstractFacade<Prueba> {
 
     @DELETE
     @Path("{id}")
-    public Response remove(@PathParam("id") Integer id,  @HeaderParam("token") String token) throws NonexistentEntityException {
+    public Response remove(@PathParam("id") Integer id, @HeaderParam("token") String token) throws NonexistentEntityException {
         if (vs.ValidarToken(token)) {
             objPrueba.destroy(id);
             return Response.status(Response.Status.OK).build(); // Código 200 para solicitud exitosa
         } else {
             return Response.status(Response.Status.UNAUTHORIZED).entity("Error: Token no válido").build(); // Código 401 para no autorizado
-        }    }
+        }
+    }
 
     @GET
     @Path("{id}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Prueba find(@PathParam("id") Integer id) {
+    public Rol find(@PathParam("id") Integer id) {
         return super.find(id);
     }
 
     @GET
     @Override
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Prueba> findAll() {
+    public List<Rol> findAll() {
         return super.findAll();
     }
 
@@ -107,7 +109,7 @@ public class PruebaFacadeREST extends AbstractFacade<Prueba> {
     @GET
     @Path("{from}/{to}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Prueba> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
+    public List<Rol> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
         return super.findRange(new int[]{from, to});
     }
 

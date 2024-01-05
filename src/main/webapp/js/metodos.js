@@ -96,3 +96,14 @@ async function runDH(claveBOB) {
 
     return aliceSharedKey;
 }
+
+function cifradoAES(mensaje, clave) {
+    var ciphertext = CryptoJS.AES.encrypt(mensaje, clave).toString();
+    return ciphertext;
+}
+
+function descifradoAES(ciphertext, clave) {
+    var bytes = CryptoJS.AES.decrypt(ciphertext, clave);
+    var originalText = bytes.toString(CryptoJS.enc.Utf8);
+    return originalText;
+}

@@ -14,6 +14,7 @@ import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -37,6 +38,18 @@ public class PagoFacadeREST extends AbstractFacade<Pago> {
     public PagoFacadeREST() {
         super(Pago.class);
     }
+    
+     @OPTIONS
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public Response optionscreate() {
+        return Response
+                .status(Response.Status.OK)
+                .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+                .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
+                .header("Access-Control-Allow-Credentials", "true")
+                .build();
+    }
 
     @POST
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -44,8 +57,13 @@ public class PagoFacadeREST extends AbstractFacade<Pago> {
         int codigo = 0;
         try {
             codigo = pagoservice.crear(pagodto);
-            return Response.status(Response.Status.OK).entity(codigo).build();
-
+            return Response
+                    .status(Response.Status.OK)
+                    .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                    .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+                    .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
+                    .header("Access-Control-Allow-Credentials", "true")
+                    .entity(codigo).build();
         } catch (Exception e) {
             return Response.status(Response.Status.EXPECTATION_FAILED).entity(codigo).build();
 
