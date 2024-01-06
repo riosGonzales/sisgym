@@ -1,5 +1,7 @@
 # MuslitoFIT - SistemaGym
 
+V0.7
+
 **Desarrolladores:**
 - Echegaray Ayala, Angie 😺
 - Marin Silva, Daniella
