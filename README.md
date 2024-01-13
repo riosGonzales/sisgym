@@ -1,6 +1,6 @@
 # MuslitoFIT - SistemaGym - Backend
 
-V0.7.1
+Version: 1.0.7
 
 **Desarrolladores:**
 - Echegaray Ayala, Angie 😺
@@ -9,17 +9,10 @@ V0.7.1
 - Rios Gonzales, Jeancarlos
 - Rivero Gamarra, Alejandro
 
-**Frontend (Actual):**
-- HTML5
-- CSS
-- JavaScript
-- Bootstrap
+[Frontend Repository](https://github.com/riosGonzales/sisgym-frontend.git)
 
-**Backend (Actual):**
-- Java
-- REST API
-- MySQL
+Sistema para ayudar en la administración eficiente y efectiva de un gimnasio, centro de fitness o instalación deportiva. 
 
-**Futuras Tecnologías:**
-- Frontend: Angular (70%)
-- Backend: Spring
+# Uso
+
+Si te encuentras interesado en las funcionalidades del sistema dale click [aqui](./funciones.md).
