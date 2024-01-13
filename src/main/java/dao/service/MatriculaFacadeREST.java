@@ -35,7 +35,7 @@ public class MatriculaFacadeREST extends AbstractFacade<Matricula> {
     public Response optionsCrear() {
         return CorsUtil.buildCorsResponse();
     }
-
+//Hola
     @POST
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response crear(Matricula entity) {
