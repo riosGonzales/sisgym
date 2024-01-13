@@ -193,5 +193,30 @@ public class FacturaJpaController implements Serializable {
             em.close();
         }
     }
+ public List<Object[]> findIngresosPorMes() {
+        EntityManager em = getEntityManager();
+        try {
+            Query query = em.createNamedQuery("Factura.findIngresosPorMes");
+            return query.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+    
+    
+public static void main(String[] args) {
+    FacturaJpaController facturaController = new FacturaJpaController();
 
+    // Llamar al método findIngresosPorMes
+    List<Object[]> ingresosPorMes = facturaController.findIngresosPorMes();
+
+    // Imprimir resultados
+    for (Object[] ingreso : ingresosPorMes) {
+        int año = (int) ingreso[0];
+        int mes = (int) ingreso[1];
+        double ingresos = (double) ingreso[2];
+        System.out.println("Año: " + año + ", Mes: " + mes + ", Ingresos: " + ingresos);
+    }
+}
+    
 }

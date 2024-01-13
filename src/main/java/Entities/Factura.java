@@ -36,6 +36,13 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Factura.findByFechaInicio", query = "SELECT f FROM Factura f WHERE f.fechaInicio = :fechaInicio"),
     @NamedQuery(name = "Factura.findByFechaFin", query = "SELECT f FROM Factura f WHERE f.fechaFin = :fechaFin"),
     @NamedQuery(name = "Factura.findBySubtotal", query = "SELECT f FROM Factura f WHERE f.subtotal = :subtotal"),
+    @NamedQuery(
+            name = "Factura.findIngresosPorMes",
+            query = "SELECT EXTRACT(YEAR FROM f.fechaInicio) AS Año, EXTRACT(MONTH FROM f.fechaInicio) AS Mes, SUM(f.total) AS IngresosPorMes "
+            + "FROM Factura f "
+            + "WHERE f.fechaInicio IS NOT NULL AND f.total IS NOT NULL "
+            + "GROUP BY Año, Mes"
+    ),
     @NamedQuery(name = "Factura.findByTotal", query = "SELECT f FROM Factura f WHERE f.total = :total")})
 public class Factura implements Serializable {
 

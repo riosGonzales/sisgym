@@ -8,9 +8,11 @@ import Entities.Asistencia;
 import Entities.Cliente;
 import Service.AsistenciaService;
 import Service.ClienteService;
+import Service.CorsUtil;
 import Service.ValidacionService;
 import dto.AsistenciaDTO;
 import java.util.List;
+import java.util.Map;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -49,42 +51,36 @@ public class AsistenciaFacadeREST extends AbstractFacade<Asistencia> {
 
     @OPTIONS
     public Response optionsCrear() {
-        return Response.ok()
-                .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-                .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization, token")
-                .header("Access-Control-Allow-Credentials", "true")
-                .build();
+        return CorsUtil.buildCorsResponseToken();
     }
 
     @POST
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response crear(AsistenciaDTO entidad, @HeaderParam("token") String token) {
-        if (validacion.ValidarToken(token)) {
-            try {
-                Cliente cliente = clienteService.buscarDNI(entidad.getClienteidCliente());
-                if (cliente != null) {
-                    asistenciaService.crear(entidad);
-                    String nombre = cliente.getNombreCliente();
-                    String apellido = cliente.getApellidos();
-                    String respuesta = "{\"nombreCliente\": \"" + nombre + "\", \"apellidos\": \"" + apellido + "\"}";
+        if (!validacion.ValidarToken(token)) {
+            return CorsUtil.buildUnauthorizedResponse();
+        }
 
-                    return Response
-                            .status(Response.Status.OK)
-                            .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                            .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-                            .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization, token")
-                            .header("Access-Control-Allow-Credentials", "true")
-                            .entity(respuesta)
-                            .build();
-                } else {
-                    return Response.status(Response.Status.NOT_FOUND).entity("Cliente no encontrado").build();
-                }
-            } catch (Exception e) {
-                return Response.status(Response.Status.BAD_REQUEST).entity("Error: Token no válido").build();
+        try {
+            Cliente cliente = clienteService.buscarDNI(entidad.getClienteidCliente());
+
+            if (cliente == null) {
+                return CorsUtil.buildNotFoundResponse("Cliente no encontrado");
             }
-        } else {
-            return Response.status(Response.Status.UNAUTHORIZED).entity("Error: Token no válido").build();
+
+            if (cliente.getEstaClie() != 1) {
+                return CorsUtil.buildNotFoundResponse("Matricula expirada");
+            }
+
+            asistenciaService.crear(entidad);
+
+            String nombre = cliente.getNombreCliente();
+            String apellido = cliente.getApellidos();
+            String respuesta = "{\"nombreCliente\": \"" + nombre + "\", \"apellidos\": \"" + apellido + "\"}";
+
+            return CorsUtil.buildOkResponse(respuesta);
+        } catch (Exception e) {
+            return CorsUtil.buildUnauthorizedResponse();
         }
     }
 
@@ -99,6 +95,25 @@ public class AsistenciaFacadeREST extends AbstractFacade<Asistencia> {
     @Path("{id}")
     public void remove(@PathParam("id") Integer id) {
         super.remove(super.find(id));
+    }
+
+    @OPTIONS
+    @Path("contar-asis")
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public Response optionsCount() {
+        return CorsUtil.buildCorsResponse();
+    }
+
+    @GET
+    @Path("contar-asis")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public Response countAsistencias() {
+        try {
+            List<Map<String, Object>> contador = asistenciaService.countAsistencia();
+            return CorsUtil.buildCorsResponse(contador);
+        } catch (Exception e) {
+            return CorsUtil.buildCorsResponseError();
+        }
     }
 
     @GET

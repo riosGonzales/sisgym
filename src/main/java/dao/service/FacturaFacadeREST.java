@@ -5,9 +5,11 @@
 package dao.service;
 
 import Entities.Factura;
+import Service.CorsUtil;
 import Service.FacturaService;
 import dto.FacturaDTO;
 import java.util.List;
+import java.util.Map;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.ws.rs.Consumes;
@@ -35,13 +37,7 @@ public class FacturaFacadeREST extends AbstractFacade<Factura> {
     @OPTIONS
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response optionscrear() {
-        return Response
-                .status(Response.Status.OK)
-                .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-                .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
-                .header("Access-Control-Allow-Credentials", "true")
-                .build();
+        return CorsUtil.buildCorsResponse();
     }
 
     @POST
@@ -50,16 +46,9 @@ public class FacturaFacadeREST extends AbstractFacade<Factura> {
         int codigo = 0;
         try {
             codigo = facturaService.create(facturaDTO);
-            return Response
-                    .status(Response.Status.OK)
-                    .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                    .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-                    .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
-                    .header("Access-Control-Allow-Credentials", "true")
-                    .entity(codigo).build();
+            return CorsUtil.buildCorsResponse(codigo);
         } catch (Exception e) {
-            return Response.status(Response.Status.EXPECTATION_FAILED).entity(codigo).build();
-
+            return CorsUtil.buildCorsResponseError();
         }
     }
 
@@ -97,16 +86,10 @@ public class FacturaFacadeREST extends AbstractFacade<Factura> {
         return super.findRange(new int[]{from, to});
     }
 
-    
     @OPTIONS
     @Path("generarFactura/{idFactura}")
     public Response optionsgenerarFactura() {
-        return Response.ok()
-                .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-                .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
-                .header("Access-Control-Allow-Credentials", "true")
-                .build();
+        return CorsUtil.buildCorsResponse();
     }
 
     @GET
@@ -114,15 +97,9 @@ public class FacturaFacadeREST extends AbstractFacade<Factura> {
     public Response generarFactura(@PathParam("idFactura") Integer idFactura) {
         try {
             facturaService.generarFactura(idFactura);
-            return Response
-                    .status(Response.Status.OK)
-                    .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                    .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-                    .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
-                    .header("Access-Control-Allow-Credentials", "true")
-                    .build();
+            return CorsUtil.buildCorsResponse();
         } catch (Exception e) {
-            return Response.status(Response.Status.EXPECTATION_FAILED).build();
+            return CorsUtil.buildCorsResponseError();
         }
     }
 
@@ -131,6 +108,24 @@ public class FacturaFacadeREST extends AbstractFacade<Factura> {
     @Produces(MediaType.TEXT_PLAIN)
     public String countREST() {
         return String.valueOf(super.count());
+    }
+
+    @OPTIONS
+    @Path("ingresos")
+    public Response optionsIngresos() {
+        return CorsUtil.buildCorsResponse();
+    }
+
+    @GET
+    @Path("ingresos")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public Response getIngresos() {
+        try {
+            List<Map<String, Object>> ingresos = facturaService.getIngresos();
+            return CorsUtil.buildCorsResponse(ingresos);
+        } catch (Exception e) {
+            return CorsUtil.buildCorsResponseError();
+        }
     }
 
     @Override

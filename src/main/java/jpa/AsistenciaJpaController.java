@@ -15,6 +15,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
 import jpa.exceptions.NonexistentEntityException;
 
 /**
@@ -26,7 +27,7 @@ public class AsistenciaJpaController implements Serializable {
     public AsistenciaJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
-    private  EntityManagerFactory emf = Persistence.createEntityManagerFactory("com.mycompany_Sis_Gym_war_1.0-SNAPSHOTPU");
+    private EntityManagerFactory emf = Persistence.createEntityManagerFactory("com.mycompany_Sis_Gym_war_1.0-SNAPSHOTPU");
 
     public AsistenciaJpaController() {
     }
@@ -155,7 +156,17 @@ public class AsistenciaJpaController implements Serializable {
         }
     }
 
-    public int getAsistenciaCount() {
+    public List<Object[]> countAsistenciasPorDia() {
+        EntityManager em = getEntityManager();
+        try {
+            Query query = em.createNamedQuery("Asistencia.countAsistenciasPorDia");
+            return query.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+  public int getAsistenciaCount() {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
@@ -167,5 +178,19 @@ public class AsistenciaJpaController implements Serializable {
             em.close();
         }
     }
-    
+
+    public static void main(String[] args) {
+        AsistenciaJpaController controller = new AsistenciaJpaController();
+
+        try {
+            List<Object[]> result = controller.countAsistenciasPorDia();
+
+            System.out.println("Resultados de countAsistenciasPorDia:");
+            for (Object[] row : result) {
+                System.out.println("Fecha: " + row[0] + ", Asistencias: " + row[1]);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    } 
 }

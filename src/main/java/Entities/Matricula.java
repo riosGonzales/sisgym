@@ -29,6 +29,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Matricula.findAll", query = "SELECT m FROM Matricula m"),
     @NamedQuery(name = "Matricula.findByIdMatricula", query = "SELECT m FROM Matricula m WHERE m.idMatricula = :idMatricula"),
     @NamedQuery(name = "Matricula.findByFechaInicio", query = "SELECT m FROM Matricula m WHERE m.fechaInicio = :fechaInicio"),
+    @NamedQuery(name = "Matricula.countByMembresia", query = "SELECT m.tipoMembresia, COUNT(ma) as cantidad FROM Matricula ma JOIN ma.idMembresia m GROUP BY ma.idMembresia, m.tipoMembresia"),
     @NamedQuery(name = "Matricula.findByFechaFin", query = "SELECT m FROM Matricula m WHERE m.fechaFin = :fechaFin")})
 public class Matricula implements Serializable {
 
@@ -54,7 +55,6 @@ public class Matricula implements Serializable {
     @JoinColumn(name = "idMembresia", referencedColumnName = "idMembresia")
     @ManyToOne(optional = false)
     private Membresia idMembresia;
-    
 
     public Matricula() {
     }
@@ -77,7 +77,6 @@ public class Matricula implements Serializable {
         this.idMembresia = idMembresia;
 
     }
-
 
     public Integer getIdMatricula() {
         return idMatricula;

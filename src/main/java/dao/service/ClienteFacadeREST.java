@@ -2,6 +2,7 @@ package dao.service;
 
 import Entities.Cliente;
 import Service.ClienteService;
+import Service.CorsUtil;
 import Service.ValidacionService;
 import java.util.List;
 import java.util.logging.Level;
@@ -23,16 +24,12 @@ import javax.ws.rs.core.Response;
 import jpa.exceptions.IllegalOrphanException;
 import jpa.exceptions.NonexistentEntityException;
 
-/**
- *
- * @author Usuario
- */
 @Stateless
 @Path("entities.cliente")
 public class ClienteFacadeREST extends AbstractFacade<Cliente> {
 
-//    @PersistenceContext(unitName = "com.mycompany_Sis_Gym_war_1.0-SNAPSHOTPU")
-//    private EntityManager em;
+    /*@PersistenceContext(unitName = "com.mycompany_Sis_Gym_war_1.0-SNAPSHOTPU")
+    private EntityManager em; */
     ClienteService servicio = new ClienteService();
     ValidacionService validacion = new ValidacionService();
 
@@ -40,21 +37,9 @@ public class ClienteFacadeREST extends AbstractFacade<Cliente> {
         super(Cliente.class);
     }
 
-//@POST
-//@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-//public void create(ClienteDTO clienteDTO, @HeaderParam("token") String token, @HeaderParam("usu") String usu) {
-//    if (validacion.ValidarToken(usu, token)) {
-//        servicio.crear(clienteDTO);
-//    }
-//}
     @OPTIONS
     public Response optionsCreate() {
-        return Response.ok()
-                .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-                .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization, token")
-                .header("Access-Control-Allow-Credentials", "true")
-                .build();
+        return CorsUtil.buildCorsResponseToken();
     }
 
     @POST
@@ -62,32 +47,12 @@ public class ClienteFacadeREST extends AbstractFacade<Cliente> {
     public Response create(Cliente entidad, @HeaderParam("token") String token) {
         if (validacion.ValidarToken(token)) {
             int codigo = servicio.crear(entidad);
-            return Response
-                    .status(Response.Status.OK)
-                    .header("Access-Control-Allow-Origin", "*")
-                    .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-                    .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization, token")
-                    .header("Access-Control-Allow-Credentials", "true")
-                    .entity(codigo).build();
+            return CorsUtil.buildCorsResponseToken(codigo);
         } else {
-            return Response.status(Response.Status.UNAUTHORIZED).entity("Error: Token no válido").build(); // Código 401 para no autorizado
+            return CorsUtil.buildUnauthorizedResponse();
         }
     }
 
-//    @PUT
-//    @Path("/{id}")
-//    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-//    public void edit(@PathParam("id") Integer id, ClienteDTO clienteDTO) {
-//        try {
-//            clienteDTO.setId(id);
-//            servicio.editar(clienteDTO);
-//        } catch (NonexistentEntityException ex) {
-//            Logger.getLogger(ClienteFacadeREST.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//    }
-    
-    
-    
     @PUT
     @Path("/{id}")
     @Produces({MediaType.APPLICATION_JSON})
@@ -96,33 +61,20 @@ public class ClienteFacadeREST extends AbstractFacade<Cliente> {
         try {
             if (validacion.ValidarToken(token)) {
                 servicio.editar2(id, entidad);
-                return Response
-                        .status(Response.Status.OK)
-                        .header("Access-Control-Allow-Origin", "*")
-                        .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-                        .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization, token")
-                        .header("Access-Control-Allow-Credentials", "true")
-                        .entity(entidad).build();
+                return CorsUtil.buildCorsResponseToken(entidad);
             } else {
-                return Response.status(Response.Status.UNAUTHORIZED).entity("Error: Token no válido").build(); // Código 401 para no autorizado
-
+                return CorsUtil.buildUnauthorizedResponse();
             }
         } catch (NonexistentEntityException ex) {
             Logger.getLogger(ClienteFacadeREST.class.getName()).log(Level.SEVERE, null, ex);
-            return Response.status(Response.Status.EXPECTATION_FAILED).entity("Error: Token no válido").build(); // Código 401 para no autorizado
-
+            return CorsUtil.buildNotFoundResponse("Error");
         }
     }
 
     @OPTIONS
     @Path("/{id}")
     public Response optionsDelete() {
-        return Response.ok()
-                .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-                .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization, token")
-                .header("Access-Control-Allow-Credentials", "true")
-                .build();
+        return CorsUtil.buildCorsResponseToken();
     }
 
     @DELETE
@@ -130,15 +82,26 @@ public class ClienteFacadeREST extends AbstractFacade<Cliente> {
     public Response remove(@PathParam("id") Integer id, @HeaderParam("token") String token) throws IllegalOrphanException, NonexistentEntityException {
         if (validacion.ValidarToken(token)) {
             servicio.LogicDelete(id);
-            return Response
-                    .status(Response.Status.OK)
-                    .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                    .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-                    .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization, token")
-                    .header("Access-Control-Allow-Credentials", "true")
-                    .build();
+            return CorsUtil.buildCorsResponseToken();
         } else {
-            return Response.status(Response.Status.UNAUTHORIZED).entity("Error: Token no válido").build(); // Código 401 para no autorizado
+            return CorsUtil.buildUnauthorizedResponse();
+        }
+    }
+
+    @OPTIONS
+    @Path("/renovar/{id}")
+    public Response optionsRenovar() {
+        return CorsUtil.buildCorsResponseToken();
+    }
+
+    @DELETE
+    @Path("/renovar/{id}")
+    public Response renovar(@PathParam("id") Integer id, @HeaderParam("token") String token) throws IllegalOrphanException, NonexistentEntityException {
+        if (validacion.ValidarToken(token)) {
+            servicio.Renovar(id);
+            return CorsUtil.buildCorsResponseToken();
+        } else {
+            return CorsUtil.buildUnauthorizedResponse();
         }
     }
 
@@ -158,12 +121,7 @@ public class ClienteFacadeREST extends AbstractFacade<Cliente> {
     @OPTIONS
     @Path("imprimirPDF")
     public Response optionsimprimirPDF() {
-        return Response.ok()
-                .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-                .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization, token")
-                .header("Access-Control-Allow-Credentials", "true")
-                .build();
+        return CorsUtil.buildCorsResponseToken();
     }
 
     @GET
@@ -171,42 +129,33 @@ public class ClienteFacadeREST extends AbstractFacade<Cliente> {
     public Response imprimirPDF(@HeaderParam("token") String token) {
         if (validacion.ValidarToken(token)) {
             servicio.imprimirReporte();
-            return Response
-                    .status(Response.Status.OK)
-                    .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                    .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-                    .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization, token")
-                    .header("Access-Control-Allow-Credentials", "true")
-                    .entity("{\"status\": \"valido\"}")
-                    .build();
+            return CorsUtil.buildOkResponse("{\"status\": \"valido\"}");
         } else {
-            return Response.status(Response.Status.UNAUTHORIZED).entity("Error: Token no válido").build(); // Código 401 para no autorizad
+            return CorsUtil.buildUnauthorizedResponse();
         }
     }
 
-//    @GET
-//    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-//    public List<Cliente> findAll(@HeaderParam("token") String token, @HeaderParam("usu") String usu) {
-//        if (validacion.ValidarToken(usu, token)) {
-//            return servicio.ListaClientes();
-//
-//        } else {
-//            return null;
-//        }
-//    }
-    private Response buildCORSResponse(String jsonResponse) {
-        return Response.ok(jsonResponse)
-                .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-                .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization, token")
-                .header("Access-Control-Allow-Credentials", "true")
-                .build();
+    @OPTIONS
+    @Path("imprimirPDF2")
+    public Response optionsimprimirPDF2() {
+        return CorsUtil.buildCorsResponseToken();
+    }
+
+    @GET
+    @Path("imprimirPDF2")
+    public Response imprimirPDF2(@HeaderParam("token") String token) {
+        if (validacion.ValidarToken(token)) {
+            servicio.imprimirReporte2();
+            return CorsUtil.buildOkResponse("{\"status\": \"valido\"}");
+        } else {
+            return CorsUtil.buildUnauthorizedResponse();
+        }
     }
 
     @OPTIONS
     @Produces(MediaType.APPLICATION_JSON)
     public Response options() {
-        return buildCORSResponse("");
+        return CorsUtil.buildCorsResponseToken();
     }
 
     @GET
@@ -214,19 +163,34 @@ public class ClienteFacadeREST extends AbstractFacade<Cliente> {
     public Response findAll(@HeaderParam("token") String token) {
         try {
             if (validacion.ValidarToken(token)) {
-                return Response
-                        .status(Response.Status.OK)
-                        .header("Access-Control-Allow-Origin", "*")
-                        .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-                        .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization, token")
-                        .header("Access-Control-Allow-Credentials", "true")
-                        .entity(servicio.ListaClientes())
-                        .build();
+                return CorsUtil.buildCorsResponseToken(servicio.ListaClientes());
             } else {
-                return Response.status(Response.Status.UNAUTHORIZED).entity("Error de autenticación: Token inválido").build();
+                return CorsUtil.buildUnauthorizedResponse();
             }
         } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error en el servidor").build();
+            return CorsUtil.buildCorsResponseError();
+        }
+    }
+
+    @OPTIONS
+    @Path("/findAll2")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response optionsEC() {
+        return CorsUtil.buildCorsResponseToken();
+    }
+
+    @GET
+    @Path("/findAll2")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response findAll2(@HeaderParam("token") String token) {
+        try {
+            if (validacion.ValidarToken(token)) {
+                return CorsUtil.buildCorsResponseToken(servicio.ListaExClientes());
+            } else {
+                return CorsUtil.buildUnauthorizedResponse();
+            }
+        } catch (Exception e) {
+            return CorsUtil.buildCorsResponseError();
         }
     }
 

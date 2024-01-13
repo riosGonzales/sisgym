@@ -11,45 +11,38 @@ import jpa.*;
 import jpa.exceptions.*;
 
 public class ClienteService {
-
+    
     ClienteJpaController jpaCliente = new ClienteJpaController();
-
-//    public void crear(ClienteDTO clienteDTO) {
-//
-//        List<Factura> facturasCli = new LinkedList<>();
-//        List<Asistencia> asistenciasCli = new LinkedList<>();
-//        List<Matricula> matriculasCli = new LinkedList<>();
-//
-//        Cliente entidad = new Cliente(0, clienteDTO.getNombre(), clienteDTO.getApellido(), clienteDTO.getDni(),
-//                clienteDTO.getTelefono(), facturasCli, asistenciasCli, matriculasCli);
-//        jpaCliente.create(entidad);
-//
-//    }
+    
     public int crear(Cliente entidad) {
         int codigo = 0;
         List<Factura> facturasCli = new LinkedList<>();
         List<Asistencia> asistenciasCli = new LinkedList<>();
         List<Matricula> matriculasCli = new LinkedList<>();
-
+        
         entidad.setFacturaList(facturasCli);
         entidad.setAsistenciaList(asistenciasCli);
         entidad.setMatriculaList(matriculasCli);
         entidad.setEstaClie((short) 1);
-
+        
         try {
             jpaCliente.create(entidad);
             codigo = entidad.getIdCliente();
             CorreoSingular(entidad);
         } catch (Exception e) {
         }
-
+        
         return codigo;
     }
-
+    
     public List<Cliente> ListaClientes() {
         return jpaCliente.findClientesByEstado(1);
     }
-
+    
+    public List<Cliente> ListaExClientes() {
+        return jpaCliente.findClientesByEstado(0);
+    }
+    
     public void eliminar(int id) throws IllegalOrphanException {
         try {
             jpaCliente.destroy(id);
@@ -57,39 +50,30 @@ public class ClienteService {
             Logger.getLogger(ClienteService.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-    //jiijijij
-//en mi mente funciona jiijji
+    
     public Cliente buscar(int id) {
         return jpaCliente.findCliente(id);
     }
-
+    
     public Cliente buscarDNI(String dni) {
         return jpaCliente.findByDni(dni);
     }
-
-//    public void editar(ClienteDTO clienteDTO) throws NonexistentEntityException {
-//        try {
-//            Cliente entidad = buscar(clienteDTO.getId());
-//            entidad.setApellidos(clienteDTO.getApellido());
-//            entidad.setDni(clienteDTO.getDni());
-//            entidad.setNombreCliente(clienteDTO.getNombre());
-//            entidad.setTelefonoCliente(clienteDTO.getTelefono());
-//            jpaCliente.edit(entidad);
-//
-//        } catch (Exception ex) {
-//            Logger.getLogger(ClienteService.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//    }
+    
     public void LogicDelete(int id) throws IllegalOrphanException, NonexistentEntityException {
         Cliente cli = buscar(id);
         System.out.println("El estado actual de: " + cli.getNombreCliente() + " es " + cli.getEstaClie());
         cli.setEstaClie((short) 0);
         System.out.println("El estado renovado de: " + cli.getNombreCliente() + " es " + cli.getEstaClie());
-
+        
         editar2(id, cli);
     }
-
+    
+    public void Renovar(int id) throws IllegalOrphanException, NonexistentEntityException {
+        Cliente cli = buscar(id);
+        cli.setEstaClie((short) 1);
+        editar2(id, cli);
+    }
+    
     public void editar2(int id, Cliente entidad) throws NonexistentEntityException {
         try {
             Cliente buscado = buscar(id);
@@ -102,22 +86,27 @@ public class ClienteService {
 
             // Establece explícitamente el valor de idCliente en la entidad buscado
             buscado.setIdCliente(id);
-
+            
             jpaCliente.edit(buscado);
-
+            
             System.out.println("ID del cliente actualizado: " + buscado.getIdCliente());
-
+            
         } catch (Exception ex) {
             Logger.getLogger(ClienteService.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     public void imprimirReporte() {
-
+        
         GeneradorPDF gpdf = new GeneradorPDF();
         gpdf.imprimirPDF();
     }
-
+    public void imprimirReporte2() {
+        
+        GeneradorPDF gpdf = new GeneradorPDF();
+        gpdf.imprimirPDF2();
+    }
+    
 //Si el correo se repite en los registros solo se le enviara a uno
     //El paralelismo sirve a partir de 1.8. Ejemplo: 
 //           <plugin>
@@ -132,28 +121,25 @@ public class ClienteService {
 //                    </compilerArguments>
 //                </configuration>
 //            </plugin>
-    
     public void CorreoMasivo(String asunto, String cuerpo) {
-    List<Cliente> clientes = ListaClientes();
-    Set<String> correosProcesados = new HashSet<>(); // Almacena los correos procesados
+        List<Cliente> clientes = ListaClientes();
+        Set<String> correosProcesados = new HashSet<>(); // Almacena los correos procesados
 
-    // Limita la cantidad de hilos activos a 10 para no sobrecargar el servidor SMTP
-    ForkJoinPool customThreadPool = new ForkJoinPool(10);
+        // Limita la cantidad de hilos activos a 10 para no sobrecargar el servidor SMTP
+        ForkJoinPool customThreadPool = new ForkJoinPool(10);
+        
+        customThreadPool.submit(()
+                -> clientes.parallelStream()
+                        .filter(cliente -> cliente.getIdCliente() <= 6)
+                        .forEach(cliente -> {
+                            String email = cliente.getEmailClie();
+                            if (correosProcesados.add(email)) {
+                                CorreoClass.enviarCorreo(email, asunto, cuerpo);
+                            }
+                        })
+        ).join();
+    }
 
-    customThreadPool.submit(() ->
-        clientes.parallelStream()
-                .filter(cliente -> cliente.getIdCliente() <= 6)
-                .forEach(cliente -> {
-                    String email = cliente.getEmailClie();
-                    if (correosProcesados.add(email)) {
-                        CorreoClass.enviarCorreo(email, asunto, cuerpo);
-                    }
-                })
-    ).join();
-}
-
-    
-    
 //    public void CorreoMasivo(String asunto, String cuerpo) {
 //        List<Cliente> clientes = ListaClientes();
 //        Set<String> correosProcesados = new HashSet<>(); // Almacena los correos procesados
@@ -167,13 +153,12 @@ public class ClienteService {
 //                    }
 //                });
 //    }
-
     public void CorreoMasivoLento(String asunto, String cuerpo) {
-
+        
         for (Cliente cliente : ListaClientes()) {
             if (cliente.getIdCliente() <= 5 && cliente.getEstaClie() == 1) {
                 CorreoClass.enviarCorreo(cliente.getEmailClie(), asunto, cuerpo);
-
+                
             }
         }
     }
@@ -192,7 +177,7 @@ public class ClienteService {
         });
     }
 
-    public static void main(String[] args) {
+    /* public static void main(String[] args) {
         ClienteService cs = new ClienteService();
 
         long startTime = System.currentTimeMillis(); // Registra el tiempo de inicio
@@ -205,6 +190,10 @@ public class ClienteService {
 
         System.out.println("El método CorreoMasivo tardó " + duration + " milisegundos en ejecutarse.");
 
+    } */
+    public static void main(String[] args) throws IllegalOrphanException, NonexistentEntityException {
+        ClienteService cs = new ClienteService();
+        cs.Renovar(134);
     }
-
+    
 }

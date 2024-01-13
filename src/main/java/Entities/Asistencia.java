@@ -31,6 +31,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Asistencia.findAll", query = "SELECT a FROM Asistencia a"),
     @NamedQuery(name = "Asistencia.findByIdAsistencia", query = "SELECT a FROM Asistencia a WHERE a.idAsistencia = :idAsistencia"),
+    @NamedQuery(
+            name = "Asistencia.countAsistenciasPorDia",
+            query = "SELECT FUNCTION('DATE', a.fechaYHora), COUNT(a.idAsistencia) FROM Asistencia a GROUP BY FUNCTION('DATE', a.fechaYHora)"
+    ),
     @NamedQuery(name = "Asistencia.findByFechaYHora", query = "SELECT a FROM Asistencia a WHERE a.fechaYHora = :fechaYHora")})
 public class Asistencia implements Serializable {
 
@@ -102,5 +106,5 @@ public class Asistencia implements Serializable {
     public String toString() {
         return "Entities.Asistencia[ idAsistencia=" + idAsistencia + " ]";
     }
-    
+
 }

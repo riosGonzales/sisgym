@@ -68,14 +68,27 @@ public class FacturaService {
     }
 
     public List<Factura> Listar() {
-
         return facturaJPA.findFacturaEntities();
+    }
+
+    public List<Map<String, Object>> getIngresos() {
+        List<Object[]> ingresos = facturaJPA.findIngresosPorMes();
+        List<Map<String, Object>> ingresosList = new ArrayList<>();
+
+        for (Object[] ingreso : ingresos) {
+            Map<String, Object> ingresoMap = new HashMap<>();
+            ingresoMap.put("year", ingreso[0]);
+            ingresoMap.put("month", ingreso[1]);
+            ingresoMap.put("ingresos", ingreso[2]);
+            ingresosList.add(ingresoMap);
+        }
+        return ingresosList;
     }
 
     public static void main(String[] args) {
         try {
             FacturaService poto = new FacturaService();
-            poto.generarFactura(29);
+            poto.getIngresos();
         } catch (Exception e) {
             e.printStackTrace();
         }

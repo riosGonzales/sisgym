@@ -3,6 +3,7 @@ package dao.service;
 import authenti.Autenticar;
 import Entities.Usuario;
 import Service.ClaveCompartidaSingleton;
+import Service.CorsUtil;
 import Service.ValidacionService;
 import Session.Sesion;
 import chat.node;
@@ -156,7 +157,7 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
     @OPTIONS
     @Path("asociarLlave")
     public Response handleOptionsAsociarLlave() {
-        return buildCORSResponse("valido");
+        return CorsUtil.buildCORSResponse("valido");
     }
 
     @PUT
@@ -179,34 +180,25 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
                     String autenticado = Autenticar.asociarLlave(usuario);
                     usuario.setToknUsua(autenticado);
                     edit(usuario.getCodiUsua(), usuario);
-                    return buildCORSResponse("{\"resultado\":\"valido\"}");
+                    return CorsUtil.buildCORSResponse("{\"resultado\":\"valido\"}");
                 } else {
-                    return buildCORSResponse("{\"resultado\":\"no_valido\"}");
+                    return CorsUtil.buildCORSResponse("{\"resultado\":\"no_valido\"}");                    
                 }
             } else {
-                return buildCORSResponse("{\"resultado\":\"no_valido\"}");
+                    return CorsUtil.buildCORSResponse("{\"resultado\":\"no_valido\"}");                    
             }
         } catch (NoResultException e) {
-            return buildCORSResponse("{\"resultado\":\"no_valido\"}");
+                    return CorsUtil.buildCORSResponse("{\"resultado\":\"no_valido\"}");                    
         } finally {
             em.close();
         }
     }
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    private Response buildCORSResponse(String jsonResponse) {
-        return Response.ok(jsonResponse)
-                .header("Access-Control-Allow-Origin", "*")
-                .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-                .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
-                .header("Access-Control-Allow-Credentials", "true")
-                .build();
-    }
-
     @OPTIONS
     @Path("autenticarCodigo")
     public Response handleOptionsAutenticarCodigo() {
-        return buildCORSResponse("valido");
+        return CorsUtil.buildCORSResponse("valido");
     }
 
     @PUT
@@ -229,15 +221,15 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
                 boolean autenticarCodigo = Autenticar.autenticarCodigo(usuario, codigo);
 
                 if (autenticarCodigo) {
-                    return buildCORSResponse("{\"resultado\":\"valido\"}");
+                    return CorsUtil.buildCORSResponse("{\"resultado\":\"valido\"}");
                 } else {
-                    return buildCORSResponse("{\"resultado\":\"no_valido\"}");
+                    return CorsUtil.buildCORSResponse("{\"resultado\":\"no_valido\"}");                    
                 }
             } else {
-                return buildCORSResponse("{\"resultado\":\"no_valido\"}");
+                    return CorsUtil.buildCORSResponse("{\"resultado\":\"no_valido\"}");                    
             }
         } catch (NoResultException e) {
-            return buildCORSResponse("{\"resultado\":\"no_valido\"}");
+                    return CorsUtil.buildCORSResponse("{\"resultado\":\"no_valido\"}");                    
         }
     }
 
@@ -257,30 +249,29 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
     }
 
     //------------------------------------------------------------------------------------------------------------------------------
-@POST
-@Path("validarUsuario")
-@Produces({MediaType.APPLICATION_JSON})
-@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-public Response validarUsuario(
-        @Context HttpServletRequest request,
-        @FormParam("logiUsua") String logiUsua,
-        @FormParam("passUsua") String passUsua,
-        @FormParam("fechUsua") String fechUsua
-) {
-    try {
-        String rpta = jpaUsuario.validarUsuario(logiUsua, passUsua, fechUsua);
-        JsonObject jsonObject = new Gson().fromJson(rpta, JsonObject.class);
-        String tipoUsuaValue = jsonObject.get("tipoUsua").getAsString();
-        Sesion.crearSesion(request.getSession(), tipoUsuaValue);
+    @POST
+    @Path("validarUsuario")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public Response validarUsuario(
+            @Context HttpServletRequest request,
+            @FormParam("logiUsua") String logiUsua,
+            @FormParam("passUsua") String passUsua,
+            @FormParam("fechUsua") String fechUsua
+    ) {
+        try {
+            String rpta = jpaUsuario.validarUsuario(logiUsua, passUsua, fechUsua);
+            JsonObject jsonObject = new Gson().fromJson(rpta, JsonObject.class);
+            String tipoUsuaValue = jsonObject.get("tipoUsua").getAsString();
+            Sesion.crearSesion(request.getSession(), tipoUsuaValue);
 
-        // Retornar la respuesta directamente con CORS
-        return buildCORSResponse(rpta);
-    } catch (Exception e) {
-        // Manejar el error y retornar una respuesta CORS
-        return buildCORSResponse("{\"resultado\":\"no_valido\"}");
+            // Retornar la respuesta directamente con CORS
+                    return CorsUtil.buildCORSResponse(rpta);
+        } catch (Exception e) {
+            // Manejar el error y retornar una respuesta CORS
+                    return CorsUtil.buildCORSResponse("{\"resultado\":\"no_valido\"}");                    
+        }
     }
-}
-
 
     //-----------------------------------------------------------------------------------------
     @PUT

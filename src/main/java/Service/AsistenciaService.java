@@ -10,8 +10,11 @@ import dto.AsistenciaDTO;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import jpa.AsistenciaJpaController;
 import jpa.ClienteJpaController;
 
@@ -36,17 +39,30 @@ public class AsistenciaService {
         } catch (Exception e) {
         }
     }
-    
-    public List<Asistencia> Listar (){
-        return  jpaAsistencia.findAsistenciaEntities();
+
+    public List<Asistencia> Listar() {
+        return jpaAsistencia.findAsistenciaEntities();
     }
-    
+
+    public List<Map<String, Object>> countAsistencia() {
+        List<Object[]> countAsistencia = jpaAsistencia.countAsistenciasPorDia();
+        List<Map<String, Object>> asistenciaList = new ArrayList<>();
+        for (Object[] asistencia : countAsistencia) {
+            Map<String, Object> asistenciaMap = new HashMap<>();
+            asistenciaMap.put("fecha", asistencia[0]);
+            asistenciaMap.put("cantidad", asistencia[1]);
+            asistenciaList.add(asistenciaMap);            
+        }
+        return asistenciaList;
+    }
+
     public static void main(String[] args) {
-        AsistenciaService aservice = new AsistenciaService();
-        AsistenciaDTO asistdto = new AsistenciaDTO();
-        asistdto.setClienteidCliente("75626947");
-        aservice.crear(asistdto);
-        
+        try {
+            AsistenciaService objAsistencia = new AsistenciaService();
+            objAsistencia.countAsistencia();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

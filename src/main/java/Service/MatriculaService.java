@@ -5,17 +5,16 @@
 package Service;
 
 import Entities.Matricula;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jpa.MatriculaJpaController;
 import jpa.exceptions.IllegalOrphanException;
 import jpa.exceptions.NonexistentEntityException;
 
-/**
- *
- * @author jano_
- */
 public class MatriculaService {
 
     MatriculaJpaController jpaMatricula = new MatriculaJpaController();
@@ -31,9 +30,19 @@ public class MatriculaService {
     }
 
     public List<Matricula> listar() {
-
         return jpaMatricula.findMatriculaEntities();
+    }
 
+    public List<Map<String, Object>> countMembresias() {
+        List<Object[]> contarMembresias = jpaMatricula.countMembresias();
+        List<Map<String, Object>> membresiasList = new ArrayList<>();
+        for (Object[] membresia : contarMembresias) {
+            Map<String, Object> membresiaMap = new HashMap<>();
+            membresiaMap.put("tipoMembresia", membresia[0]);
+            membresiaMap.put("cantidad", membresia[1]);
+            membresiasList.add(membresiaMap);
+        }
+        return membresiasList;
     }
 
     public Matricula buscar(int id) {
@@ -59,5 +68,14 @@ public class MatriculaService {
         } catch (Exception e) {
         }
 
+    }
+
+    public static void main(String[] args) {
+        try {
+            MatriculaService objMatricula = new MatriculaService();
+            objMatricula.countMembresias();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

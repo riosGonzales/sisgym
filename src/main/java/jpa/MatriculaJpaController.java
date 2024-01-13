@@ -13,6 +13,7 @@ import Entities.Cliente;
 import Entities.Matricula;
 import Entities.Membresia;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -183,7 +184,17 @@ public class MatriculaJpaController implements Serializable {
             em.close();
         }
     }
+public List<Object[]> countMembresias() {
+    EntityManager em = getEntityManager();
+    try {
+        Query query = em.createNamedQuery("Matricula.countByMembresia");
+        return query.getResultList();
+    } finally {
+        em.close();
+    }
+}
 
+    
     public int getMatriculaCount() {
         EntityManager em = getEntityManager();
         try {
@@ -196,5 +207,13 @@ public class MatriculaJpaController implements Serializable {
             em.close();
         }
     }
-    
+        public static void main(String[] args) {
+        MatriculaJpaController controller = new MatriculaJpaController();
+        List<Object[]> result = controller.countMembresias();
+        for (Object[] row : result) {
+            String nombreMembresia = Objects.toString(row[0], "N/A");
+            long cantidad = (long) row[1];
+            System.out.println(nombreMembresia + ": " + cantidad);
+        }
+    }
 }

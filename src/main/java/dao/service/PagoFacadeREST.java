@@ -1,10 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package dao.service;
 
 import Entities.Pago;
+import Service.CorsUtil;
 import Service.PagoService;
 import dto.PagoDTO;
 import java.util.List;
@@ -23,10 +21,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-/**
- *
- * @author anshi
- */
 @Stateless
 @Path("entities.pago")
 public class PagoFacadeREST extends AbstractFacade<Pago> {
@@ -42,13 +36,7 @@ public class PagoFacadeREST extends AbstractFacade<Pago> {
      @OPTIONS
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response optionscreate() {
-        return Response
-                .status(Response.Status.OK)
-                .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-                .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
-                .header("Access-Control-Allow-Credentials", "true")
-                .build();
+        return CorsUtil.buildCorsResponse();
     }
 
     @POST
@@ -57,16 +45,9 @@ public class PagoFacadeREST extends AbstractFacade<Pago> {
         int codigo = 0;
         try {
             codigo = pagoservice.crear(pagodto);
-            return Response
-                    .status(Response.Status.OK)
-                    .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                    .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-                    .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
-                    .header("Access-Control-Allow-Credentials", "true")
-                    .entity(codigo).build();
+            return CorsUtil.buildCorsResponse(codigo);
         } catch (Exception e) {
-            return Response.status(Response.Status.EXPECTATION_FAILED).entity(codigo).build();
-
+            return CorsUtil.buildCorsResponseError();
         }
     }
 
