@@ -1,6 +1,6 @@
-# MuslitoFIT - SistemaGym
+# MuslitoFIT - SistemaGym - Backend
 
-V0.7
+V0.7.1
 
 **Desarrolladores:**
 - Echegaray Ayala, Angie 😺
