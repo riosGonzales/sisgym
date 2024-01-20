@@ -6,11 +6,15 @@ package dao.service;
 
 import Entities.Asistencia;
 import Entities.Cliente;
+import Entities.Matricula;
 import Service.AsistenciaService;
 import Service.ClienteService;
 import Service.CorsUtil;
+import Service.MatriculaService;
 import Service.ValidacionService;
 import dto.AsistenciaDTO;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.Stateless;
@@ -39,6 +43,7 @@ public class AsistenciaFacadeREST extends AbstractFacade<Asistencia> {
 
     ValidacionService validacion = new ValidacionService();
     AsistenciaService asistenciaService = new AsistenciaService();
+    MatriculaService matriculaService = new MatriculaService();
     ClienteService clienteService = new ClienteService();
     Cliente cliente = new Cliente();
 
@@ -63,7 +68,6 @@ public class AsistenciaFacadeREST extends AbstractFacade<Asistencia> {
 
         try {
             Cliente cliente = clienteService.buscarDNI(entidad.getClienteidCliente());
-
             if (cliente == null) {
                 return CorsUtil.buildNotFoundResponse("Cliente no encontrado");
             }
@@ -72,14 +76,34 @@ public class AsistenciaFacadeREST extends AbstractFacade<Asistencia> {
                 return CorsUtil.buildNotFoundResponse("Matricula expirada");
             }
 
-            asistenciaService.crear(entidad);
+            Matricula matriculaConFechas = matriculaService.obtenerFechas(cliente.getDni());
+            if (matriculaConFechas != null) {
+                Date fechaActual = new Date();
+                Date fechaInicio = matriculaConFechas.getFechaInicio();
+                Date fechaFin = matriculaConFechas.getFechaFin();
 
-            String nombre = cliente.getNombreCliente();
-            String apellido = cliente.getApellidos();
-            String respuesta = "{\"nombreCliente\": \"" + nombre + "\", \"apellidos\": \"" + apellido + "\"}";
-
-            return CorsUtil.buildOkResponse(respuesta);
+                if (fechaActual.after(fechaInicio) && fechaActual.before(fechaFin)) {
+                    asistenciaService.crear(entidad);
+                    String nombre = cliente.getNombreCliente();
+                    String apellido = cliente.getApellidos();
+                    long diasDiferencia = (fechaFin.getTime() - fechaActual.getTime()) / (1000 * 60 * 60 * 24);
+                    String respuesta = "{\"nombreCliente\": \"" + nombre + "\", \"apellidos\": \"" + apellido
+                            + "\", \"diasDiferencia\": " + diasDiferencia + "}";
+                    return CorsUtil.buildOkResponse(respuesta);
+                } else if (fechaActual.before(fechaInicio)) {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+                    String fechaInicioString = dateFormat.format(fechaInicio);
+                    String respuesta = "Membresia inactiva\", \"fechaInicio\": \"" + fechaInicioString;
+                    return CorsUtil.buildNotFoundResponse(respuesta);
+                } else {
+                    clienteService.LogicDelete(cliente.getIdCliente());
+                    return CorsUtil.buildNotFoundResponse("Matricula expirada");
+                }
+            } else {
+                return CorsUtil.buildNotFoundResponse("No encontrado");
+            }
         } catch (Exception e) {
+            e.printStackTrace();
             return CorsUtil.buildUnauthorizedResponse();
         }
     }
@@ -87,13 +111,15 @@ public class AsistenciaFacadeREST extends AbstractFacade<Asistencia> {
     @PUT
     @Path("{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void edit(@PathParam("id") Integer id, Asistencia entity) {
+    public void edit(@PathParam("id") Integer id, Asistencia entity
+    ) {
         super.edit(entity);
     }
 
     @DELETE
     @Path("{id}")
-    public void remove(@PathParam("id") Integer id) {
+    public void remove(@PathParam("id") Integer id
+    ) {
         super.remove(super.find(id));
     }
 
@@ -119,7 +145,8 @@ public class AsistenciaFacadeREST extends AbstractFacade<Asistencia> {
     @GET
     @Path("{id}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Asistencia find(@PathParam("id") Integer id) {
+    public Asistencia find(@PathParam("id") Integer id
+    ) {
         return super.find(id);
     }
 
@@ -133,7 +160,8 @@ public class AsistenciaFacadeREST extends AbstractFacade<Asistencia> {
     @GET
     @Path("{from}/{to}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Asistencia> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
+    public List<Asistencia> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to
+    ) {
         return super.findRange(new int[]{from, to});
     }
 

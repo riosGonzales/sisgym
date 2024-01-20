@@ -4,8 +4,14 @@
  */
 package Service;
 
+import Entities.Cliente;
 import Entities.Matricula;
+import java.text.SimpleDateFormat;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +24,7 @@ import jpa.exceptions.NonexistentEntityException;
 public class MatriculaService {
 
     MatriculaJpaController jpaMatricula = new MatriculaJpaController();
+    ClienteService clienteService = new ClienteService();
 
     public int crear(Matricula entidad) {
         int codigo = 0;
@@ -70,10 +77,44 @@ public class MatriculaService {
 
     }
 
+    public Date obtenerFechaFinMasRecientePorDNI(String dni) {
+        Cliente cliente = clienteService.buscarDNI(dni);
+        if (cliente != null) {
+            List<Matricula> matriculas = cliente.getMatriculaList();
+            if (!matriculas.isEmpty()) {
+                Matricula matriculaMasReciente = matriculas.get(matriculas.size() - 1);
+                return matriculaMasReciente.getFechaFin();
+            }
+        }
+        return null;
+    }
+
+    public Matricula obtenerFechas(String dni) {
+        Cliente cliente = clienteService.buscarDNI(dni);
+        if (cliente != null) {
+            List<Matricula> matriculas = cliente.getMatriculaList();
+            if (!matriculas.isEmpty()) {
+                Matricula matriculaMasReciente = matriculas.get(matriculas.size() - 1);
+                Date fechaInicio = matriculaMasReciente.getFechaInicio();
+                Date fechaFin = matriculaMasReciente.getFechaFin();
+                return new Matricula(fechaInicio, fechaFin);
+            }
+        }
+        return null;
+    }
+
     public static void main(String[] args) {
         try {
-            MatriculaService objMatricula = new MatriculaService();
-            objMatricula.countMembresias();
+            MatriculaService matriculaService = new MatriculaService();
+            String dniABuscar = "70861979";
+            Matricula matriculaConFechas = matriculaService.obtenerFechas(dniABuscar);
+            if (matriculaConFechas != null) {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+                System.out.println("Fecha de inicio: " + dateFormat.format(matriculaConFechas.getFechaInicio()));
+                System.out.println("Fecha de fin: " + dateFormat.format(matriculaConFechas.getFechaFin()));
+            } else {
+                System.out.println("No se encontró ninguna matrícula con fechas para el DNI " + dniABuscar);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

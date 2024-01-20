@@ -47,7 +47,11 @@ public class ClienteFacadeREST extends AbstractFacade<Cliente> {
     public Response create(Cliente entidad, @HeaderParam("token") String token) {
         if (validacion.ValidarToken(token)) {
             int codigo = servicio.crear(entidad);
-            return CorsUtil.buildCorsResponseToken(codigo);
+            if (codigo == -1) {
+                return CorsUtil.buildResponse(Response.Status.BAD_REQUEST, "{\"error\": \"Cliente ya existente\"}");
+            } else {
+                return CorsUtil.buildCorsResponseToken(codigo);
+            }
         } else {
             return CorsUtil.buildUnauthorizedResponse();
         }

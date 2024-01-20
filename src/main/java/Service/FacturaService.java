@@ -7,6 +7,7 @@ import Entities.Pago;
 import conexion.MySQL;
 import dto.FacturaDTO;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -70,6 +71,7 @@ public class FacturaService {
     public List<Factura> Listar() {
         return facturaJPA.findFacturaEntities();
     }
+
 
     public List<Map<String, Object>> getIngresos() {
         List<Object[]> ingresos = facturaJPA.findIngresosPorMes();

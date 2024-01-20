@@ -11,38 +11,45 @@ import jpa.*;
 import jpa.exceptions.*;
 
 public class ClienteService {
-    
+
     ClienteJpaController jpaCliente = new ClienteJpaController();
-    
+
     public int crear(Cliente entidad) {
         int codigo = 0;
+
+        Cliente clienteExistente = buscarDNI(entidad.getDni());
+        if (clienteExistente != null) {
+            System.out.println("El DNI ya está registrado.");
+            return -1; // Retorna un valor especial para indicar que el cliente ya existe
+        }
+
         List<Factura> facturasCli = new LinkedList<>();
         List<Asistencia> asistenciasCli = new LinkedList<>();
         List<Matricula> matriculasCli = new LinkedList<>();
-        
+
         entidad.setFacturaList(facturasCli);
         entidad.setAsistenciaList(asistenciasCli);
         entidad.setMatriculaList(matriculasCli);
         entidad.setEstaClie((short) 1);
-        
+
         try {
             jpaCliente.create(entidad);
             codigo = entidad.getIdCliente();
             CorreoSingular(entidad);
         } catch (Exception e) {
         }
-        
+
         return codigo;
     }
-    
+
     public List<Cliente> ListaClientes() {
         return jpaCliente.findClientesByEstado(1);
     }
-    
+
     public List<Cliente> ListaExClientes() {
         return jpaCliente.findClientesByEstado(0);
     }
-    
+
     public void eliminar(int id) throws IllegalOrphanException {
         try {
             jpaCliente.destroy(id);
@@ -50,30 +57,30 @@ public class ClienteService {
             Logger.getLogger(ClienteService.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public Cliente buscar(int id) {
         return jpaCliente.findCliente(id);
     }
-    
+
     public Cliente buscarDNI(String dni) {
         return jpaCliente.findByDni(dni);
     }
-    
+
     public void LogicDelete(int id) throws IllegalOrphanException, NonexistentEntityException {
         Cliente cli = buscar(id);
         System.out.println("El estado actual de: " + cli.getNombreCliente() + " es " + cli.getEstaClie());
         cli.setEstaClie((short) 0);
         System.out.println("El estado renovado de: " + cli.getNombreCliente() + " es " + cli.getEstaClie());
-        
+
         editar2(id, cli);
     }
-    
+
     public void Renovar(int id) throws IllegalOrphanException, NonexistentEntityException {
         Cliente cli = buscar(id);
         cli.setEstaClie((short) 1);
         editar2(id, cli);
     }
-    
+
     public void editar2(int id, Cliente entidad) throws NonexistentEntityException {
         try {
             Cliente buscado = buscar(id);
@@ -86,27 +93,28 @@ public class ClienteService {
 
             // Establece explícitamente el valor de idCliente en la entidad buscado
             buscado.setIdCliente(id);
-            
+
             jpaCliente.edit(buscado);
-            
+
             System.out.println("ID del cliente actualizado: " + buscado.getIdCliente());
-            
+
         } catch (Exception ex) {
             Logger.getLogger(ClienteService.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     public void imprimirReporte() {
-        
+
         GeneradorPDF gpdf = new GeneradorPDF();
         gpdf.imprimirPDF();
     }
+
     public void imprimirReporte2() {
-        
+
         GeneradorPDF gpdf = new GeneradorPDF();
         gpdf.imprimirPDF2();
     }
-    
+
 //Si el correo se repite en los registros solo se le enviara a uno
     //El paralelismo sirve a partir de 1.8. Ejemplo: 
 //           <plugin>
@@ -127,7 +135,7 @@ public class ClienteService {
 
         // Limita la cantidad de hilos activos a 10 para no sobrecargar el servidor SMTP
         ForkJoinPool customThreadPool = new ForkJoinPool(10);
-        
+
         customThreadPool.submit(()
                 -> clientes.parallelStream()
                         .filter(cliente -> cliente.getIdCliente() <= 6)
@@ -154,11 +162,11 @@ public class ClienteService {
 //                });
 //    }
     public void CorreoMasivoLento(String asunto, String cuerpo) {
-        
+
         for (Cliente cliente : ListaClientes()) {
             if (cliente.getIdCliente() <= 5 && cliente.getEstaClie() == 1) {
                 CorreoClass.enviarCorreo(cliente.getEmailClie(), asunto, cuerpo);
-                
+
             }
         }
     }
@@ -195,5 +203,5 @@ public class ClienteService {
         ClienteService cs = new ClienteService();
         cs.Renovar(134);
     }
-    
+
 }

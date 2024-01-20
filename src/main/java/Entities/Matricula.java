@@ -82,6 +82,11 @@ public class Matricula implements Serializable {
         return idMatricula;
     }
 
+    public Matricula(Date fechaInicio, Date fechaFin) {
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
+    }
+
     public void setIdMatricula(Integer idMatricula) {
         this.idMatricula = idMatricula;
     }

@@ -1,13 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package dao.service;
 
 import Entities.Factura;
 import Service.CorsUtil;
 import Service.FacturaService;
 import dto.FacturaDTO;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.Stateless;
@@ -23,12 +20,14 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import reportes.rptExcel;
 
 @Stateless
 @Path("entities.factura")
 public class FacturaFacadeREST extends AbstractFacade<Factura> {
 
     FacturaService facturaService = new FacturaService();
+    rptExcel excel = new rptExcel();
 
     public FacturaFacadeREST() {
         super(Factura.class);
@@ -124,6 +123,24 @@ public class FacturaFacadeREST extends AbstractFacade<Factura> {
             List<Map<String, Object>> ingresos = facturaService.getIngresos();
             return CorsUtil.buildCorsResponse(ingresos);
         } catch (Exception e) {
+            return CorsUtil.buildCorsResponseError();
+        }
+    }
+
+    @OPTIONS
+    @Path("generarIngresos")
+    public Response generarIngresos() {
+        return CorsUtil.buildCorsResponse();
+    }
+
+    @GET
+    @Path("generarIngresos")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response generarExcelIngresos() {
+        try {
+            excel.generarExcelIngresos();
+            return CorsUtil.buildCorsResponse();
+        } catch (IOException e) {
             return CorsUtil.buildCorsResponseError();
         }
     }
