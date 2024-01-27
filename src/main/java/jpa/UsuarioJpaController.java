@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package jpa;
 
 import Entities.Usuario;
@@ -13,17 +10,11 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
-import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import jpa.exceptions.NonexistentEntityException;
-import security.AES;
 import security.JwtHelper;
 
-/**
- *
- * @author Usuario
- */
 public class UsuarioJpaController implements Serializable {
 
     public UsuarioJpaController() {
@@ -205,9 +196,13 @@ public String validarUsuario(String logiUsua, String passUsua, String fecha) {
     public static void main(String[] args) {
         try {
             UsuarioJpaController usujpa = new UsuarioJpaController();
-            String aa = usujpa.validarUsuario("tUki", "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad", "2023-10-13");
-            System.out.println(aa);
-
+           /* String aa = usujpa.validarUsuario("tUki", "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad", "2023-10-13");
+            System.out.println(aa); */           
+           Usuario usuario = usujpa.findUsuario(1);
+            if (usuario != null) {                
+                String poto = usuario.getLogiUsua();
+                System.out.println("nombre: " + poto);
+            }         
         } catch (Exception e) {
             e.printStackTrace();
         }

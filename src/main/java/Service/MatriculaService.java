@@ -1,16 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package Service;
 
 import Entities.Cliente;
 import Entities.Matricula;
 import java.text.SimpleDateFormat;
-import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -113,7 +107,7 @@ public class MatriculaService {
                 System.out.println("Fecha de inicio: " + dateFormat.format(matriculaConFechas.getFechaInicio()));
                 System.out.println("Fecha de fin: " + dateFormat.format(matriculaConFechas.getFechaFin()));
             } else {
-                System.out.println("No se encontró ninguna matrícula con fechas para el DNI " + dniABuscar);
+                System.out.println("no se encuentra");
             }
         } catch (Exception e) {
             e.printStackTrace();

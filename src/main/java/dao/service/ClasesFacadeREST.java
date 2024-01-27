@@ -2,8 +2,11 @@ package dao.service;
 
 import Entities.Clases;
 import Service.ClaseService;
+import Service.CorsUtil;
 import Service.ValidacionService;
-import com.google.gson.Gson;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -14,6 +17,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -41,15 +45,19 @@ public class ClasesFacadeREST extends AbstractFacade<Clases> {
         super(Clases.class);
     }
 
+    @OPTIONS
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response optionsCrear() {
+        return CorsUtil.buildCorsResponseToken();
+    }
     @POST
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
     public Response crear(Clases entity, @HeaderParam("token") String token) {
-        if (vs.ValidarToken( token)) {
-            cs.crearRapido( entity);
-            return Response.status(Response.Status.OK).build(); // Código 200 para solicitud exitosa
-
+        if (vs.ValidarToken(token)) {
+            cs.crearRapido(entity);
+            return CorsUtil.buildCorsResponseToken();
         } else {
-            return Response.status(Response.Status.UNAUTHORIZED).entity("Error: Token no válido").build(); // Código 401 para no autorizado
+            return CorsUtil.buildUnauthorizedResponse();
         }
     }
 
@@ -73,21 +81,51 @@ public class ClasesFacadeREST extends AbstractFacade<Clases> {
         return super.find(id);
     }
 
+    @OPTIONS
+    @Path("json")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response options() {
+        return CorsUtil.buildCorsResponseToken();
+    }
+
     @GET
     @Path("json")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public Response listar(@HeaderParam("token") String token) {
-        if (token != null ) {
-            if (vs.ValidarToken( token)) {
-                return Response.status(Response.Status.OK).entity(cs.getJSon()).build(); // Código 200 para solicitud exitosa
+        try {
+            if (vs.ValidarToken(token)) {
+                return CorsUtil.buildCorsResponseToken(cs.getJSon());
             } else {
-                return Response.status(Response.Status.UNAUTHORIZED).entity("Error: Token no válido").build(); // Código 401 para no autorizado
+                return CorsUtil.buildUnauthorizedResponse();
             }
-        } else {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Error: Token no reconocido").build(); // Código 401 para no autorizado
-
+        } catch (Exception e) {
+            return CorsUtil.buildCorsResponseError();
         }
+    }
 
+    @OPTIONS
+    @Path("buscarFecha/{fecha}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response optionsBuscarFecha() {
+        return CorsUtil.buildCorsResponseToken();
+    }
+
+    @GET
+    @Path("buscarFecha/{fecha}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response buscarFecha(@HeaderParam("token") String token, @PathParam("fecha") String fechaString) {
+        try {
+            if (vs.ValidarToken(token)) {
+                String fechaBusqueda = fechaString;
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                Date fecha = sdf.parse(fechaBusqueda);
+                return CorsUtil.buildCorsResponseToken(cs.buscarFecha(fecha));
+            } else {
+                return CorsUtil.buildUnauthorizedResponse();
+            }
+        } catch (ParseException e) {
+            return CorsUtil.buildCorsResponseError();
+        }
     }
 
     @GET

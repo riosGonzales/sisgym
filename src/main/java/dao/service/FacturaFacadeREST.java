@@ -21,6 +21,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import reportes.rptExcel;
+import reportes.rptPDF;
 
 @Stateless
 @Path("entities.factura")
@@ -28,6 +29,7 @@ public class FacturaFacadeREST extends AbstractFacade<Factura> {
 
     FacturaService facturaService = new FacturaService();
     rptExcel excel = new rptExcel();
+    rptPDF pdf = new rptPDF();
 
     public FacturaFacadeREST() {
         super(Factura.class);
@@ -139,6 +141,24 @@ public class FacturaFacadeREST extends AbstractFacade<Factura> {
     public Response generarExcelIngresos() {
         try {
             excel.generarExcelIngresos();
+            return CorsUtil.buildCorsResponse();
+        } catch (IOException e) {
+            return CorsUtil.buildCorsResponseError();
+        }
+    }
+
+    @OPTIONS
+    @Path("generarIngresosPDF")
+    public Response ingresosPDF() {
+        return CorsUtil.buildCorsResponse();
+    }
+
+    @GET
+    @Path("generarIngresosPDF")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response ingresos_pdf() {
+        try {
+            pdf.generarPdfIngresos();
             return CorsUtil.buildCorsResponse();
         } catch (IOException e) {
             return CorsUtil.buildCorsResponseError();

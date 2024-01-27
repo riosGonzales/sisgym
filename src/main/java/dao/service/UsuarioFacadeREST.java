@@ -4,12 +4,16 @@ import authenti.Autenticar;
 import Entities.Usuario;
 import Service.ClaveCompartidaSingleton;
 import Service.CorsUtil;
+import Service.UsuarioService;
 import Service.ValidacionService;
 import Session.Sesion;
 import chat.node;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.*;
@@ -29,6 +33,7 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
     private EntityManagerFactory emf = Persistence.createEntityManagerFactory("com.mycompany_Sis_Gym_war_1.0-SNAPSHOTPU");
     UsuarioJpaController jpaUsuario = new UsuarioJpaController();
     ValidacionService vService = new ValidacionService();
+    UsuarioService objUsuario = new UsuarioService();
     static node bob = new node();
 
     public UsuarioFacadeREST() {
@@ -182,13 +187,13 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
                     edit(usuario.getCodiUsua(), usuario);
                     return CorsUtil.buildCORSResponse("{\"resultado\":\"valido\"}");
                 } else {
-                    return CorsUtil.buildCORSResponse("{\"resultado\":\"no_valido\"}");                    
+                    return CorsUtil.buildCORSResponse("{\"resultado\":\"no_valido\"}");
                 }
             } else {
-                    return CorsUtil.buildCORSResponse("{\"resultado\":\"no_valido\"}");                    
+                return CorsUtil.buildCORSResponse("{\"resultado\":\"no_valido\"}");
             }
         } catch (NoResultException e) {
-                    return CorsUtil.buildCORSResponse("{\"resultado\":\"no_valido\"}");                    
+            return CorsUtil.buildCORSResponse("{\"resultado\":\"no_valido\"}");
         } finally {
             em.close();
         }
@@ -223,13 +228,13 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
                 if (autenticarCodigo) {
                     return CorsUtil.buildCORSResponse("{\"resultado\":\"valido\"}");
                 } else {
-                    return CorsUtil.buildCORSResponse("{\"resultado\":\"no_valido\"}");                    
+                    return CorsUtil.buildCORSResponse("{\"resultado\":\"no_valido\"}");
                 }
             } else {
-                    return CorsUtil.buildCORSResponse("{\"resultado\":\"no_valido\"}");                    
+                return CorsUtil.buildCORSResponse("{\"resultado\":\"no_valido\"}");
             }
         } catch (NoResultException e) {
-                    return CorsUtil.buildCORSResponse("{\"resultado\":\"no_valido\"}");                    
+            return CorsUtil.buildCORSResponse("{\"resultado\":\"no_valido\"}");
         }
     }
 
@@ -266,10 +271,10 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
             Sesion.crearSesion(request.getSession(), tipoUsuaValue);
 
             // Retornar la respuesta directamente con CORS
-                    return CorsUtil.buildCORSResponse(rpta);
+            return CorsUtil.buildCORSResponse(rpta);
         } catch (Exception e) {
             // Manejar el error y retornar una respuesta CORS
-                    return CorsUtil.buildCORSResponse("{\"resultado\":\"no_valido\"}");                    
+            return CorsUtil.buildCORSResponse("{\"resultado\":\"no_valido\"}");
         }
     }
 
@@ -292,6 +297,25 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
                 return Response.status(Response.Status.UNAUTHORIZED).entity("Error: Token no válido").build(); // Código 401 para no autorizado
 
             }
+        }
+    }
+
+    @OPTIONS
+    @Path("buscarUsuario/{codiUsua}")
+    public Response optionsBuscarUsuario() {
+        return CorsUtil.buildCORSResponse("valido");
+    }
+
+    @GET
+    @Path("buscarUsuario/{codiUsua}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response buscarUsuario(@PathParam("codiUsua") String codiUsua) {
+        try {
+            Integer idUsuario = Integer.valueOf(codiUsua);
+            String resultado = objUsuario.buscarUsuario(idUsuario);
+            return CorsUtil.buildCORSResponse(resultado);
+        } catch (NumberFormatException e) {
+            return CorsUtil.buildCorsResponseError();
         }
     }
 

@@ -13,6 +13,7 @@ import Service.CorsUtil;
 import Service.MatriculaService;
 import Service.ValidacionService;
 import dto.AsistenciaDTO;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -32,6 +33,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import reportes.rptExcel;
+import reportes.rptPDF;
 
 /**
  *
@@ -46,6 +49,8 @@ public class AsistenciaFacadeREST extends AbstractFacade<Asistencia> {
     MatriculaService matriculaService = new MatriculaService();
     ClienteService clienteService = new ClienteService();
     Cliente cliente = new Cliente();
+    rptExcel excel = new rptExcel();
+    rptPDF pdf = new rptPDF();
 
     @PersistenceContext(unitName = "com.mycompany_Sis_Gym_war_1.0-SNAPSHOTPU")
     private EntityManager em;
@@ -127,6 +132,34 @@ public class AsistenciaFacadeREST extends AbstractFacade<Asistencia> {
     @Path("contar-asis")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response optionsCount() {
+        return CorsUtil.buildCorsResponse();
+    }
+
+    @OPTIONS
+    @Path("generarExcel")
+    public Response generarExcel() {
+        return CorsUtil.buildCorsResponse();
+    }
+
+    @GET
+    @Path("generarExcel")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response generar_Excel() {
+        excel.generarExcelAsistencia();
+        return CorsUtil.buildCorsResponse();
+    }
+
+    @OPTIONS
+    @Path("generarPDF")
+    public Response generarPDF() {
+        return CorsUtil.buildCorsResponse();
+    }
+
+    @GET
+    @Path("generarPDF")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response generar_pdf() throws IOException {
+        pdf.generarPdfAsistencia();
         return CorsUtil.buildCorsResponse();
     }
 

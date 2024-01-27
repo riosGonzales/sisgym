@@ -48,12 +48,8 @@ const renderCalendar = () => {
             // Almacena la fecha en sessionStorage
             sessionStorage.setItem("fechaCalendario", formattedDate);
             openModal();
-            console.log(`Mostrando modal para el día ${formattedDate}`);
-
         }
     });
-
-    console.log("Calendario renderizado"); // Agregado para depuración
 };
 
 renderCalendar();

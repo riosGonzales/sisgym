@@ -6,6 +6,9 @@ package Service;
 
 import Entities.Clases;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -20,19 +23,18 @@ public class ClaseService {
     ClasesJpaController claseJPA = new ClasesJpaController();
     ClienteService cs = new ClienteService();
 
- public void crearRapido(Clases entidad) {
-    claseJPA.create(entidad);
+    public void crearRapido(Clases entidad) {
+        claseJPA.create(entidad);
 
-    String asunto = "¡Nueva Clase en MuslitoFIT! No te la pierdas con asincronia y paralelismo.";
-    String cuerpo = construirCuerpoCorreo(entidad);
+        String asunto = "¡Nueva Clase en MuslitoFIT!";
+        String cuerpo = construirCuerpoCorreo(entidad);
 
- 
-    CompletableFuture<Void> completableFuture = CompletableFuture.runAsync(() -> cs.CorreoMasivo(asunto, cuerpo));
-    completableFuture.join(); // Espera hasta que se complete
+        CompletableFuture<Void> completableFuture = CompletableFuture.runAsync(() -> cs.CorreoMasivo(asunto, cuerpo));
+        completableFuture.join(); // Espera hasta que se complete
 
-}
- 
- public void crearLento(Clases entidad) {
+    }
+
+    public void crearLento(Clases entidad) {
         claseJPA.create(entidad);
 
         String asunto = "¡Nueva Clase en MuslitoFIT! No te la pierdas metodo normal.";
@@ -42,12 +44,15 @@ public class ClaseService {
     }
 
     public String construirCuerpoCorreo(Clases entidad) {
-        return "Estimado/a " + "muslito" + ",\n\n"
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String fechaFormateada = dateFormat.format(entidad.getFecha());
+
+        return "Estimado/a muslito,\n\n"
                 + "¡Estamos emocionados de anunciar nuestra nueva clase en MuslitoFIT!\n\n"
                 + "Detalles:\n"
                 + "- Clase: " + entidad.getDescripcion() + "\n"
                 + "- Instructor: " + entidad.getInstructor() + "\n"
-                + "- Fecha: " + entidad.getFecha() + "\n"
+                + "- Fecha: " + fechaFormateada + "\n"
                 + "- Horario: " + entidad.getHorario() + "\n"
                 + "- Dirección: Av. 28 Julio 600 " + "\n\n"
                 + "No te pierdas esta oportunidad para ampliar tu rutina de ejercicios. ¡Únete a nosotros para esta clase exclusiva!\n\n"
@@ -58,14 +63,25 @@ public class ClaseService {
 
     public String getJSon() {
         List<Clases> lista = claseJPA.findClasesEntities();
-        Gson g = new Gson();
-        String resultado = g.toJson(lista);
-        return "{\"data\":" + resultado + " }";
+        Gson gson = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd")
+                .create();
+        String resultado = gson.toJson(lista);
+        return resultado;
     }
-    
-    public static void main(String[] args) {
-        
-          // Crea una instancia de tu clase
+
+    public String buscarFecha(Date fecha) {
+        List<Clases> lista = claseJPA.findClasesByFecha(fecha);
+        Gson gson = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd")
+                .create();
+        String resultado = gson.toJson(lista);
+        return resultado;
+    }
+
+    /*    public static void main(String[] args) {
+
+        // Crea una instancia de tu clase
         ClaseService instancia = new ClaseService();
 
         // Crea una instancia de la entidad o clase que se utilizará
@@ -83,8 +99,15 @@ public class ClaseService {
 
         // Muestra el tiempo transcurrido en milisegundos
         System.out.println("El método tardó " + (tiempoTranscurrido / 1000000) + " milisegundos en ejecutarse.");
-        
-        
+
+    } */
+    public static void main(String[] args) throws ParseException {
+        ClaseService claseJPA = new ClaseService();
+        String fechaBusqueda = "2023-11-02";
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date fecha = sdf.parse(fechaBusqueda);
+        String jsonResult = claseJPA.buscarFecha(fecha);
+        System.out.println(jsonResult);
     }
 
 }

@@ -3,6 +3,7 @@ package dao.service;
 import Entities.Matricula;
 import Service.CorsUtil;
 import Service.MatriculaService;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.Stateless;
@@ -19,12 +20,16 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import jpa.exceptions.IllegalOrphanException;
+import reportes.rptExcel;
+import reportes.rptPDF;
 
 @Stateless
 @Path("entities.matricula")
 public class MatriculaFacadeREST extends AbstractFacade<Matricula> {
 
     MatriculaService matriculaservice = new MatriculaService();
+    rptExcel excel = new rptExcel();
+    rptPDF pdf= new rptPDF();
 
     public MatriculaFacadeREST() {
         super(Matricula.class);
@@ -95,6 +100,42 @@ public class MatriculaFacadeREST extends AbstractFacade<Matricula> {
         return matriculaservice.listar();
     }
 
+    
+    @OPTIONS
+    @Path("generarExcel")
+    public Response generarExcel() {
+        return CorsUtil.buildCorsResponse();
+    }
+
+    @GET
+    @Path("generarExcel")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response generar_Excel() {
+        try {
+            excel.generarExcelMembresias();
+            return CorsUtil.buildCorsResponse();
+        } catch (IOException e) {
+            return CorsUtil.buildCorsResponseError();
+        }
+    }
+    @OPTIONS
+    @Path("generarPDF")
+    public Response generarPDF() {
+        return CorsUtil.buildCorsResponse();
+    }
+
+    @GET
+    @Path("generarPDF")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response generar_pdf() {
+        try {
+            pdf.generarPdfMembresias();
+            return CorsUtil.buildCorsResponse();
+        } catch (IOException e) {
+            return CorsUtil.buildCorsResponseError();
+        }
+    }
+    
     @GET
     @Path("{from}/{to}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})

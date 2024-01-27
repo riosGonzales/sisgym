@@ -3,6 +3,9 @@ package jpa;
 import Entities.Clases;
 import Entities.exceptions.NonexistentEntityException;
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -17,7 +20,7 @@ import javax.persistence.criteria.Root;
  * @author wtke9
  */
 public class ClasesJpaController implements Serializable {
-    
+
     private final EntityManagerFactory emf = Persistence.createEntityManagerFactory("com.mycompany_Sis_Gym_war_1.0-SNAPSHOTPU");
 
     public ClasesJpaController() {
@@ -130,11 +133,30 @@ public class ClasesJpaController implements Serializable {
             em.close();
         }
     }
+
+    public List<Clases> findClasesByFecha(Date fecha) {
+        EntityManager em = getEntityManager();
+        try {
+            Query query = em.createNamedQuery("Clases.findByFecha");
+            query.setParameter("fecha", fecha);
+            return query.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
     public static void main(String[] args) {
-       ClasesJpaController controller = new ClasesJpaController();
-        List<Clases> clasesList = controller.findClasesEntities();
-        for (Clases clases : clasesList) {
-            System.out.println("Código de Clase: " + clases.getIdClases());
-        } 
+        ClasesJpaController controller = new ClasesJpaController();
+        String fechaBusqueda = "2023-11-02";
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date fecha = sdf.parse(fechaBusqueda);
+            List<Clases> clasesList = controller.findClasesByFecha(fecha);          
+            for (Clases clases : clasesList) {
+                System.out.println(clases.getIdClases());
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 }
